@@ -1,0 +1,22 @@
+import Image from 'next/image'
+import React from 'react'
+
+const Putting = () => {
+    return (
+        <div className='min-h-screen h-screen w-full relative'>
+            {/* Bg Image */}
+            <Image src="/images/putting.png" alt="Why Chipa" width={1920} height={1080} className='w-full h-full object-cover z-0' />
+
+            {/* Content */}
+            <div className='absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] h-max py-6 sm:py-8 md:py-10 bg-white text-black px-6 sm:px-8 md:px-12 lg:px-16 box-content'>
+
+                <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight leading-relaxed text-center mb-3 sm:mb-4 md:mb-6'>Putting</h1>
+
+                <p className='text-sm sm:text-base md:text-lg text-center tracking-tight leading-relaxed font-extralight text-gray-500'>Putting's where it really counts. You can hit great drives and solid approach shots, but if you don't finish on the green, the score won't show it. Most strokes come from putting, and that's usually what separates an average round from a good one.</p>
+
+            </div>
+        </div>
+    )
+}
+
+export default Putting
