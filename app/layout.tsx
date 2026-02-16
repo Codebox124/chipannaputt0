@@ -4,6 +4,9 @@ import "./globals.css";
 import Header from "./components/ui/header";
 import Footer from "./components/ui/footer";
 import AddToCartToast from "./components/ui/addToCartToast";
+import {
+  ClerkProvider,
+} from '@clerk/nextjs'
 
 const cabin = Cabin({
   subsets: ["latin"],
@@ -25,10 +28,12 @@ export default function RootLayout({
       <body
         className={`${cabin.className} antialiased`}
       >
-        <Header />
-        {children}
-        <AddToCartToast />
-        <Footer />
+        <ClerkProvider>
+          <Header />
+          {children}
+          <AddToCartToast />
+          <Footer />
+        </ClerkProvider>
       </body>
     </html>
   );

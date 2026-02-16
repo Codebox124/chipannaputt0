@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation'
 import { SearchOutlined, ShoppingOutlined, UserOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
 import useCart from '@/store';
 
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -170,7 +172,14 @@ const Header = () => {
 
                         {/* User icon */}
                         <div className='flex items-center justify-center text-2xl font-extralight'>
-                            <UserOutlined />
+                            <SignedIn>
+                                <UserButton />
+                            </SignedIn>
+                            <SignedOut>
+                                <SignInButton>
+                                    <UserOutlined />
+                                </SignInButton>
+                            </SignedOut>
                         </div>
                     </div>
                 </div>
@@ -252,10 +261,20 @@ const Header = () => {
                                         )}
                                     </Link>
 
-                                    <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                        <UserOutlined className="text-xl" />
-                                        <span>Account</span>
-                                    </button>
+                                    <SignedIn>
+                                        <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
+                                            <UserButton />
+                                            <span>Account</span>
+                                        </button>
+                                    </SignedIn>
+                                    <SignedOut>
+                                        <SignInButton>
+                                            <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
+                                                <UserOutlined className="text-xl" />
+                                                <span>Login</span>
+                                            </button>
+                                        </SignInButton>
+                                    </SignedOut>
                                 </div>
                             </nav>
                         </motion.div>
