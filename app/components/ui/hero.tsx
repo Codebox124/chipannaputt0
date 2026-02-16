@@ -2,7 +2,7 @@ import React from 'react'
 
 const HeroSection = () => {
     return (
-        <div className=' w-full h-screen hero flex items-center justify-start px-4 sm:px-8 md:px-12 lg:px-20'>
+        <div className=' w-full md:h-screen h-[50vh] mt-20 hero flex items-center justify-start px-4 sm:px-8 md:px-12 lg:px-20'>
             <div className='flex flex-col items-start justify-center gap-2 sm:gap-3 md:gap-4 text-white'>
 
                 {/* everything left aligned */}

@@ -3,7 +3,7 @@ import StoreSection from '../components/ui/store-section'
 
 const page = () => {
     return (
-        <div>
+        <div className='mt-20'>
             <StoreSection isStorePage={true} description={`The Chip Anna Putt Kit thoroughly covers essential putting techniques, including mastering direction, speed, and developing a keen feel for the stroke through visual learning. This kit guides you in identifying and correcting common errors such as pushes and pulls, while emphasizing the importance of visualizing a square putter head at impact. Additionally, it offers expert insights into reading greens effectively, helping you improve your touch and decision-making on the course. Designed for golfers seeking to refine their putting fundamentals, this comprehensive kit combines technical detail with practical drills to enhance consistency and confidence on every putt.
 
 Your training aid kit includes everything needed to master your short game.  

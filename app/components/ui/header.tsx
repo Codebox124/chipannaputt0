@@ -91,7 +91,7 @@ const Header = () => {
                     transform: hidden ? 'translateY(-100%)' : 'translateY(0)',
                     transition: 'top 0.3s ease-in-out'
                 }}
-                className='w-full p-4 sm:p-4 md:p-5 px-4 sm:px-8 md:px-12 lg:px-16 bg-white fixed left-0 right-0 z-50 shadow-sm'>
+                className='w-full p-4 sm:p-4 md:p-5 px-9 sm:px-8 md:px-12 lg:px-16 bg-white fixed left-0 right-0 z-50 shadow-sm'>
 
                 {/* Mobile Layout: Menu | Logo | Icons */}
                 <div className='lg:hidden flex items-center justify-between w-full'>
@@ -106,7 +106,7 @@ const Header = () => {
 
                     {/* Center: Logo */}
                     <Link href="/" className='absolute left-1/2 -translate-x-1/2 flex items-center justify-center'>
-                        <Image src="/logo.png" alt="Logo" width={180} height={180} className='w-20 sm:w-24 h-auto' />
+                        <Image src="/logo.png" alt="Logo" width={180} height={180} className='md:w-20 w-36 h-auto' />
                     </Link>
 
                     {/* Right: Search & Cart Icons */}

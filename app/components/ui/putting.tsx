@@ -3,7 +3,7 @@ import React from 'react'
 
 const Putting = () => {
     return (
-        <div className='min-h-screen h-screen w-full relative'>
+        <div className='md:h-screen h-[50vh] w-full relative'>
             {/* Bg Image */}
             <Image src="/images/putting.png" alt="Why Chipa" width={1920} height={1080} className='w-full h-full object-cover z-0' />
 
