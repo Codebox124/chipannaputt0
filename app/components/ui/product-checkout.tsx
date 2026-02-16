@@ -51,7 +51,7 @@ const ProductCheckout = ({ description, isStorePage }: { description?: string, i
 
     return (
         <div>
-            <div className="flex flex-col h-screen space-y-8 overflow-y-scroll">
+            <div className="flex flex-col md:h-screen space-y-8 overflow-y-scroll">
                 <header>
                     <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">My Store</p>
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
