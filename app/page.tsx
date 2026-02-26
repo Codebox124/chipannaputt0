@@ -7,11 +7,15 @@ import Chipping from './components/ui/chipping'
 import Putting from './components/ui/putting'
 import StoreSection from './components/ui/store-section'
 import QuoteSections from './components/ui/quote-sections'
+import IntroVideoSection from './components/ui/introVideoSection'
 
 const page = () => {
   return (
     <div>
       <HeroSection />
+      {/* Intro Video Section */}
+      <IntroVideoSection />
+
       <WhyChipa />
       <Welcome />
 
