@@ -2,13 +2,17 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import useCart from '@/store'
+import { useCart } from '@/components/cart/cart-context'
+import { useTransition } from 'react'
 
 export default function ShoppingCart() {
-    const cartItems = useCart((state) => state.cart)
-    const total = useCart((state) => state.total)
-    const updateQuantity = useCart((state) => state.updateQuantity)
-    const removeFromCart = useCart((state) => state.removeFromCart)
+    const { items, updateQuantity, removeItem, clearCart } = useCart()
+    const [isPending, startTransition] = useTransition()
+
+    const total = items.reduce((sum, item) => {
+        const price = parseFloat(item.variant.price?.amount || '0')
+        return sum + (price * item.quantity)
+    }, 0)
 
     return (
         <section className="bg-gray-50 min-h-screen py-8 px-4 sm:px-6">
@@ -24,7 +28,7 @@ export default function ShoppingCart() {
                     </Link>
                 </div>
 
-                {cartItems.length === 0 ? (
+                {items.length === 0 ? (
                     <div className="text-center py-12 bg-white rounded-lg">
                         <p className="text-gray-500 text-lg mb-6">Your cart is empty</p>
                         <Link
@@ -44,85 +48,85 @@ export default function ShoppingCart() {
 
                         {/* Cart Items */}
                         <div className="space-y-6">
-                            {cartItems.map(item => (
-                                <div key={item.id} className="bg-white">
-                                    <div className="flex gap-4 pb-6">
-                                        {/* Product Image */}
-                                        <div className="w-24 h-32 sm:w-28 sm:h-36 bg-gray-100 shrink-0">
-                                            {item.image ? (
-                                                <Image
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    width={112}
-                                                    height={144}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            ) : (
+                            {items.map(item => {
+                                const price = parseFloat(item.variant.price?.amount || '0')
+                                return (
+                                    <div key={item.id} className="bg-white">
+                                        <div className="flex gap-4 pb-6">
+                                            {/* Product Image */}
+                                            <div className="w-24 h-32 sm:w-28 sm:h-36 bg-gray-100 shrink-0">
                                                 <div className="w-full h-full bg-gradient-to-br from-green-600 to-green-400" />
-                                            )}
-                                        </div>
-
-                                        {/* Product Info & Controls */}
-                                        <div className="flex-1 flex flex-col justify-between">
-                                            {/* Top Section: Name and Price */}
-                                            <div className="flex justify-between">
-                                                <div>
-                                                    <h3 className="font-semibold text-gray-900 text-base leading-tight mb-1">
-                                                        {item.name}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-600">
-                                                        ${item.price.toFixed(2)}
-                                                    </p>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="font-semibold text-gray-900">
-                                                        ${(item.price * item.quantity).toFixed(2)}
-                                                    </p>
-                                                </div>
                                             </div>
 
-                                            {/* Bottom Section: Quantity Controls & Delete */}
-                                            <div className="flex items-center gap-2">
-                                                {/* Quantity Controls */}
-                                                <div className="flex items-center border border-gray-300 rounded">
-                                                    <button
-                                                        onClick={() => {
-                                                            if (item.quantity > 1) {
-                                                                updateQuantity(item.id, item.quantity - 1)
-                                                            } else {
-                                                                removeFromCart(item)
-                                                            }
-                                                        }}
-                                                        className="px-3 py-2 hover:bg-gray-50 transition-colors text-gray-600"
-                                                    >
-                                                        −
-                                                    </button>
-                                                    <span className="px-4 text-center font-medium text-gray-900 min-w-[40px]">
-                                                        {item.quantity}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                        className="px-3 py-2 hover:bg-gray-50 transition-colors text-gray-600"
-                                                    >
-                                                        +
-                                                    </button>
+                                            {/* Product Info & Controls */}
+                                            <div className="flex-1 flex flex-col justify-between">
+                                                {/* Top Section: Name and Price */}
+                                                <div className="flex justify-between">
+                                                    <div>
+                                                        <h3 className="font-semibold text-gray-900 text-base leading-tight mb-1">
+                                                            {item.product.title}
+                                                        </h3>
+                                                        <p className="text-sm text-gray-600">
+                                                            ${price.toFixed(2)}
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="font-semibold text-gray-900">
+                                                            ${(price * item.quantity).toFixed(2)}
+                                                        </p>
+                                                    </div>
                                                 </div>
 
-                                                {/* Delete Button */}
-                                                <button
-                                                    onClick={() => removeFromCart(item)}
-                                                    className="p-2 hover:bg-gray-50 transition-colors rounded"
-                                                    aria-label="Remove item"
-                                                >
-                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600">
-                                                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" />
-                                                    </svg>
-                                                </button>
+                                                {/* Bottom Section: Quantity Controls & Delete */}
+                                                <div className="flex items-center gap-2">
+                                                    {/* Quantity Controls */}
+                                                    <div className="flex items-center border border-gray-300 rounded">
+                                                        <button
+                                                            onClick={() => startTransition(async () => {
+                                                                if (item.quantity > 1) {
+                                                                    await updateQuantity(item.id, item.quantity - 1)
+                                                                } else {
+                                                                    await removeItem(item.id)
+                                                                }
+                                                            })}
+                                                            disabled={isPending}
+                                                            className="px-3 py-2 hover:bg-gray-50 transition-colors text-gray-600 disabled:opacity-50"
+                                                        >
+                                                            −
+                                                        </button>
+                                                        <span className="px-4 text-center font-medium text-gray-900 min-w-[40px]">
+                                                            {item.quantity}
+                                                        </span>
+                                                        <button
+                                                            onClick={() => startTransition(async () => {
+                                                                await updateQuantity(item.id, item.quantity + 1)
+                                                            })}
+                                                            disabled={isPending}
+                                                            className="px-3 py-2 hover:bg-gray-50 transition-colors text-gray-600 disabled:opacity-50"
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Delete Button */}
+                                                    <button
+                                                        onClick={() => startTransition(async () => {
+                                                            await removeItem(item.id)
+                                                        })}
+                                                        disabled={isPending}
+                                                        className="p-2 hover:bg-gray-50 transition-colors rounded disabled:opacity-50"
+                                                        aria-label="Remove item"
+                                                    >
+                                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600">
+                                                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
 
                         {/* Cart Summary */}

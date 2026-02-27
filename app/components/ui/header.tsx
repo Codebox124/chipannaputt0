@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { SearchOutlined, ShoppingOutlined, UserOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
-import useCart from '@/store';
+import { useCart } from '@/components/cart/cart-context';
 
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
 
-    const cart = useCart((state) => state.cart)
+    const { items } = useCart()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     // Show header when scrolling up, hide when scrolling down
@@ -66,12 +66,13 @@ const Header = () => {
     const navLinks = [
         { name: "Home", href: "/" },
         { name: "Shop", href: "/shop" },
+        { name: "Lessons", href: "/lessons" },
+        { name: "Reviews", href: "/reviews" },
         { name: "Contact", href: "/contact" },
-        { name: "Videos", href: "/videos" },
     ]
 
     // Calculate total cart items
-    const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0)
+    const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
         <div>

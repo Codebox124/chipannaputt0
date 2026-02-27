@@ -56,7 +56,7 @@ const Footer = () => {
                 </div>
 
                 {/* Email Subscription Section */}
-                <div className="text-center">
+                <div className="text-center mb-16 pb-12 border-b border-white/30">
                     <h3 className="text-2xl font-semibold mb-6">Subscribe to our emails</h3>
                     <form onSubmit={handleSubmit} className="max-w-md mx-auto">
                         <div className="relative flex items-center border border-white/30 rounded-sm overflow-hidden bg-transparent">
@@ -89,6 +89,33 @@ const Footer = () => {
                             </button>
                         </div>
                     </form>
+                </div>
+
+                {/* Company Contact Information */}
+                <div className="text-center">
+                    <h3 className="text-2xl font-semibold mb-8">Contact Us</h3>
+                    <div className="space-y-4 text-lg">
+                        <div>
+                            <p className="font-semibold text-xl mb-2">Chip Anna Putt</p>
+                            <p>in the care of Don Sheppard</p>
+                            <p className="mt-4">1013 Bingham Ave.</p>
+                            <p>Janesville, WI 53546</p>
+                        </div>
+                        <div className="pt-4 space-y-2">
+                            <div>
+                                <p className="text-white/80">Business Phone</p>
+                                <a href="tel:608-530-8582" className="hover:text-white/70 transition-colors">
+                                    608-530-8582
+                                </a>
+                            </div>
+                            <div>
+                                <p className="text-white/80">Don's Personal Phone</p>
+                                <a href="tel:608-359-1581" className="hover:text-white/70 transition-colors">
+                                    608-359-1581
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>
