@@ -2,23 +2,18 @@
 
 import { PlusCircleIcon } from 'lucide-react'
 import { Product, ProductVariant } from '@/lib/shopify/types'
-import { useMemo, useTransition } from 'react'
+import { useMemo, useTransition, ReactNode } from 'react'
 import { useCart } from './cart-context'
-import { Button, ButtonProps } from '../ui/button'
-import { useSelectedVariant } from '@/components/products/variant-selector'
-import { useParams, useSearchParams } from 'next/navigation'
-import { ReactNode } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
-import { Loader } from '../ui/loader'
-import { getShopifyProductId } from '@/lib/shopify/utils'
 
-interface AddToCartProps extends ButtonProps {
+interface AddToCartProps {
   product: Product
   iconOnly?: boolean
   icon?: ReactNode
+  className?: string
+  onClick?: () => void
 }
 
-interface AddToCartButtonProps extends ButtonProps {
+interface AddToCartButtonProps {
   product: Product
   selectedVariant?: ProductVariant | null
   iconOnly?: boolean
@@ -42,12 +37,10 @@ export function AddToCartButton({
   className,
   iconOnly = false,
   icon = <PlusCircleIcon />,
-  ...buttonProps
 }: AddToCartButtonProps) {
   const { addItem } = useCart()
   const [isLoading, startTransition] = useTransition()
 
-  // Resolve variant locally only for variantless products (purely synchronous)
   const resolvedVariant = useMemo(() => {
     if (selectedVariant) return selectedVariant
     if (product.variants.length === 0) return getBaseProductVariant(product)
@@ -63,80 +56,33 @@ export function AddToCartButton({
 
   const isDisabled = !product.availableForSale || !resolvedVariant || isLoading
 
-  const getLoaderSize = () => {
-    const buttonSize = buttonProps.size
-    if (
-      buttonSize === 'sm' ||
-      buttonSize === 'icon-sm' ||
-      buttonSize === 'icon'
-    )
-      return 'sm'
-    if (buttonSize === 'icon-lg') return 'default'
-    if (buttonSize === 'lg') return 'lg'
-    return 'default'
-  }
-
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault()
-
         if (resolvedVariant) {
           startTransition(async () => {
-            addItem(resolvedVariant, product)
+            await addItem(resolvedVariant, product)
           })
         }
       }}
       className={className}
     >
-      <Button
+      <button
         type="submit"
         aria-label={!resolvedVariant ? 'Select one' : 'Add to cart'}
         disabled={isDisabled}
-        className={
-          iconOnly
-            ? undefined
-            : 'flex relative justify-between items-center w-full'
-        }
-        {...buttonProps}
+        className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-between gap-2"
       >
-        <AnimatePresence initial={false} mode="wait">
-          {iconOnly ? (
-            <motion.div
-              key={isLoading ? 'loading' : 'icon'}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.15 }}
-              className="flex justify-center items-center"
-            >
-              {isLoading ? (
-                <Loader size={getLoaderSize()} />
-              ) : (
-                <span className="inline-block">{icon}</span>
-              )}
-            </motion.div>
-          ) : (
-            <motion.div
-              key={isLoading ? 'loading' : getButtonText()}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="flex justify-center items-center w-full"
-            >
-              {isLoading ? (
-                <Loader size={getLoaderSize()} />
-              ) : (
-                <div className="flex justify-between items-center w-full">
-                  <span>{getButtonText()}</span>
-                  <PlusCircleIcon />
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Button>
+        {isLoading ? (
+          <span>Adding...</span>
+        ) : (
+          <>
+            <span>{getButtonText()}</span>
+            {!iconOnly && <PlusCircleIcon size={18} />}
+          </>
+        )}
+      </button>
     </form>
   )
 }
@@ -146,32 +92,11 @@ export function AddToCart({
   className,
   iconOnly = false,
   icon = <PlusCircleIcon />,
-  ...buttonProps
 }: AddToCartProps) {
-  const { variants } = product
-  const selectedVariant = useSelectedVariant(product)
-  const pathname = useParams<{ handle?: string }>()
-  const searchParams = useSearchParams()
-
-  const hasNoVariants = variants.length === 0
-  const defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined
-  const selectedVariantId = selectedVariant?.id || defaultVariantId
-  const isTargetingProduct =
-    pathname.handle === product.handle ||
-    searchParams.get('pid') === getShopifyProductId(product.id)
-
   const resolvedVariant = useMemo(() => {
-    if (hasNoVariants) return getBaseProductVariant(product)
-    if (!isTargetingProduct && !defaultVariantId) return undefined
-    return variants.find((variant) => variant.id === selectedVariantId)
-  }, [
-    hasNoVariants,
-    product,
-    isTargetingProduct,
-    defaultVariantId,
-    variants,
-    selectedVariantId,
-  ])
+    if (product.variants.length === 0) return getBaseProductVariant(product)
+    return product.variants[0]
+  }, [product])
 
   return (
     <AddToCartButton
@@ -180,7 +105,6 @@ export function AddToCart({
       className={className}
       iconOnly={iconOnly}
       icon={icon}
-      {...buttonProps}
     />
   )
 }
