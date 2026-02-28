@@ -1,137 +1,119 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Star, Upload, MessageCircle, Video } from 'lucide-react'
-
-interface Review {
-    id: string
-    name: string
-    rating: number
-    text: string
-    date: string
-    type: 'text' | 'video'
-}
-
-const SAMPLE_REVIEWS: Review[] = [
-    {
-        id: '1',
-        name: 'John Smith',
-        rating: 5,
-        text: 'Don is an excellent instructor! His clear explanations of the fundamentals really helped improve my swing. Highly recommend!',
-        date: '2 weeks ago',
-        type: 'text'
-    },
-    {
-        id: '2',
-        name: 'Sarah Johnson',
-        rating: 5,
-        text: 'The online lessons are convenient and very effective. My putting has improved dramatically. Great value for the quality of instruction.',
-        date: '1 month ago',
-        type: 'text'
-    },
-    {
-        id: '3',
-        name: 'Mike Davis',
-        rating: 5,
-        text: 'Fantastic coaching on the short game. Don really knows how to break down complex techniques into simple, actionable steps.',
-        date: '3 weeks ago',
-        type: 'text'
-    },
-    {
-        id: '4',
-        name: 'Emily Wilson',
-        rating: 5,
-        text: 'Finally someone who explained PGA fundamentals in a way that made sense to me. My confidence on the course has never been better!',
-        date: '1 week ago',
-        type: 'text'
-    },
-]
+import { useState } from 'react'
+import { Star, AlertCircle, CheckCircle } from 'lucide-react'
 
 export default function ReviewsPage() {
-    const [reviews, setReviews] = useState<Review[]>(SAMPLE_REVIEWS)
-    const [name, setName] = useState('')
-    const [rating, setRating] = useState(5)
-    const [reviewText, setReviewText] = useState('')
-    const [videoFile, setVideoFile] = useState<File | null>(null)
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        rating: 5,
+        review: '',
+        videoUrl: ''
+    })
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [activeTab, setActiveTab] = useState<'text' | 'video'>('text')
-    const [submitMessage, setSubmitMessage] = useState('')
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+    const [errorMessage, setErrorMessage] = useState('')
+    const [activeTab, setActiveTab] = useState<'reviews' | 'form'>('reviews')
 
-    const handleTextReviewSubmit = (e: React.FormEvent) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target
+        setFormData(prev => ({
+            ...prev,
+            [name]: name === 'rating' ? parseInt(value) : value
+        }))
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!name.trim() || !reviewText.trim()) {
-            setSubmitMessage('Please fill in all fields')
-            return
-        }
-
         setIsSubmitting(true)
+        setSubmitStatus('idle')
+        setErrorMessage('')
 
-        // Simulate submission delay
-        setTimeout(() => {
-            const newReview: Review = {
-                id: Date.now().toString(),
-                name,
-                rating,
-                text: reviewText,
-                date: 'just now',
-                type: 'text'
+        try {
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: 'review',
+                    data: formData
+                })
+            })
+
+            if (!response.ok) {
+                const error = await response.json()
+                throw new Error(error.error || 'Failed to submit review')
             }
 
-            setReviews([newReview, ...reviews])
-            setName('')
-            setReviewText('')
-            setRating(5)
-            setSubmitMessage('Your review has been posted successfully!')
+            setSubmitStatus('success')
+            setFormData({
+                name: '',
+                email: '',
+                rating: 5,
+                review: '',
+                videoUrl: ''
+            })
+
+            setTimeout(() => {
+                setSubmitStatus('idle')
+                setActiveTab('reviews')
+            }, 3000)
+        } catch (error) {
+            setSubmitStatus('error')
+            setErrorMessage(error instanceof Error ? error.message : 'Something went wrong')
+            console.error('[v0] Review submission error:', error)
+        } finally {
             setIsSubmitting(false)
-
-            setTimeout(() => setSubmitMessage(''), 3000)
-        }, 500)
-    }
-
-    const handleVideoReviewSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (!name.trim() || !videoFile) {
-            setSubmitMessage('Please fill in your name and select a video')
-            return
         }
-
-        setIsSubmitting(true)
-
-        // Simulate submission delay
-        setTimeout(() => {
-            const newReview: Review = {
-                id: Date.now().toString(),
-                name,
-                rating,
-                text: `Video review from ${name}`,
-                date: 'just now',
-                type: 'video'
-            }
-
-            setReviews([newReview, ...reviews])
-            setName('')
-            setVideoFile(null)
-            setRating(5)
-            setSubmitMessage('Your video review has been submitted! Thank you!')
-            setIsSubmitting(false)
-
-            setTimeout(() => setSubmitMessage(''), 3000)
-        }, 500)
     }
 
-    const renderStars = (count: number) => {
-        return (
-            <div className="flex gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                        key={i}
-                        size={16}
-                        className={i < count ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
-                    />
-                ))}
-            </div>
-        )
-    }
+    // Sample reviews data
+    const sampleReviews = [
+        {
+            id: 1,
+            name: 'Michael Johnson',
+            rating: 5,
+            review: 'Don is an amazing instructor! His method of teaching fundamentals really clicked with me. I\'ve improved my game significantly in just a few weeks.',
+            date: '2 weeks ago'
+        },
+        {
+            id: 2,
+            name: 'Sarah Williams',
+            rating: 5,
+            review: 'The personalized approach to coaching is fantastic. Don takes time to understand your goals and creates a lesson plan that works for you. Highly recommended!',
+            date: '1 month ago'
+        },
+        {
+            id: 3,
+            name: 'James Patterson',
+            rating: 5,
+            review: 'Finally understanding the proper grip and stance. Don\'s explanations are clear and easy to follow. Can\'t wait for my next lesson!',
+            date: '3 weeks ago'
+        },
+        {
+            id: 4,
+            name: 'Emily Davis',
+            rating: 5,
+            review: 'The online format works perfectly for my schedule. Don is professional, knowledgeable, and makes learning fun. Great experience overall!',
+            date: '1 week ago'
+        },
+        {
+            id: 5,
+            name: 'Robert Taylor',
+            rating: 5,
+            review: 'After years of struggling with my short game, Don finally showed me what I was doing wrong. This has been life-changing for my golf!',
+            date: '10 days ago'
+        },
+        {
+            id: 6,
+            name: 'Jessica Martinez',
+            rating: 5,
+            review: 'Don\'s knowledge of PGA fundamentals is impressive. He explains concepts in a way that makes sense and you can apply immediately on the course.',
+            date: '2 weeks ago'
+        }
+    ]
 
     return (
         <main className="min-h-screen bg-gradient-to-b from-green-50 to-white">
@@ -142,241 +124,207 @@ export default function ReviewsPage() {
                         Student Reviews
                     </h1>
                     <p className="text-xl md:text-2xl text-green-100">
-                        See what our students have to say about their experience with Chip Anna Putt
+                        Hear from students who have improved their golf game with Chip Anna Putt
                     </p>
                 </div>
             </section>
 
-            {/* Reviews and Submit Section */}
-            <section className="py-20 px-6">
-                <div className="max-w-6xl mx-auto">
-                    <div className="grid md:grid-cols-3 gap-12">
-                        {/* Reviews List */}
-                        <div className="md:col-span-2">
-                            <h2 className="text-3xl font-bold mb-8 text-gray-900">
-                                Student Testimonials
-                            </h2>
-
-                            <div className="space-y-6">
-                                {reviews.map((review) => (
-                                    <div key={review.id} className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600">
-                                        <div className="flex items-start justify-between mb-4">
-                                            <div>
-                                                <p className="font-bold text-gray-900 text-lg">{review.name}</p>
-                                                <p className="text-sm text-gray-500">{review.date}</p>
-                                            </div>
-                                            {review.type === 'video' && (
-                                                <div className="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full">
-                                                    <Video size={16} className="text-green-600" />
-                                                    <span className="text-sm font-semibold text-green-600">Video Review</span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {renderStars(review.rating)}
-
-                                        <p className="text-gray-700 mt-4 leading-relaxed">
-                                            {review.text}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Submit Review Section */}
-                        <div className="md:col-span-1">
-                            <div className="bg-white rounded-lg shadow-lg p-8 sticky top-6">
-                                <h3 className="text-2xl font-bold mb-6 text-gray-900">
-                                    Share Your Review
-                                </h3>
-
-                                {submitMessage && (
-                                    <div className={`p-4 rounded-lg mb-6 text-sm font-semibold ${
-                                        submitMessage.includes('successfully') || submitMessage.includes('submitted')
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-yellow-100 text-yellow-700'
-                                    }`}>
-                                        {submitMessage}
-                                    </div>
-                                )}
-
-                                {/* Tab Selection */}
-                                <div className="flex gap-2 mb-6 border-b-2 border-gray-200">
-                                    <button
-                                        onClick={() => setActiveTab('text')}
-                                        className={`pb-3 px-4 font-semibold transition-colors ${
-                                            activeTab === 'text'
-                                                ? 'border-b-2 border-green-600 text-green-600'
-                                                : 'text-gray-600 hover:text-gray-900'
-                                        }`}
-                                    >
-                                        <MessageCircle size={18} className="inline mr-2" />
-                                        Text
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveTab('video')}
-                                        className={`pb-3 px-4 font-semibold transition-colors ${
-                                            activeTab === 'video'
-                                                ? 'border-b-2 border-green-600 text-green-600'
-                                                : 'text-gray-600 hover:text-gray-900'
-                                        }`}
-                                    >
-                                        <Video size={18} className="inline mr-2" />
-                                        Video
-                                    </button>
-                                </div>
-
-                                {/* Text Review Form */}
-                                {activeTab === 'text' && (
-                                    <form onSubmit={handleTextReviewSubmit} className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Your Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                placeholder="John Doe"
-                                                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Rating
-                                            </label>
-                                            <div className="flex gap-2">
-                                                {[1, 2, 3, 4, 5].map((star) => (
-                                                    <button
-                                                        key={star}
-                                                        type="button"
-                                                        onClick={() => setRating(star)}
-                                                        className="focus:outline-none"
-                                                    >
-                                                        <Star
-                                                            size={24}
-                                                            className={star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
-                                                        />
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Your Review
-                                            </label>
-                                            <textarea
-                                                value={reviewText}
-                                                onChange={(e) => setReviewText(e.target.value)}
-                                                placeholder="Share your experience with Chip Anna Putt..."
-                                                rows={5}
-                                                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600 resize-none"
-                                            />
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition-colors"
-                                        >
-                                            {isSubmitting ? 'Posting...' : 'Post Review'}
-                                        </button>
-                                    </form>
-                                )}
-
-                                {/* Video Review Form */}
-                                {activeTab === 'video' && (
-                                    <form onSubmit={handleVideoReviewSubmit} className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Your Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                placeholder="John Doe"
-                                                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Rating
-                                            </label>
-                                            <div className="flex gap-2">
-                                                {[1, 2, 3, 4, 5].map((star) => (
-                                                    <button
-                                                        key={star}
-                                                        type="button"
-                                                        onClick={() => setRating(star)}
-                                                        className="focus:outline-none"
-                                                    >
-                                                        <Star
-                                                            size={24}
-                                                            className={star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
-                                                        />
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Upload Video
-                                            </label>
-                                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-600 transition-colors">
-                                                <input
-                                                    type="file"
-                                                    accept="video/*"
-                                                    onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
-                                                    className="hidden"
-                                                    id="video-upload"
-                                                />
-                                                <label htmlFor="video-upload" className="cursor-pointer">
-                                                    <Upload size={32} className="mx-auto mb-2 text-gray-400" />
-                                                    <p className="text-sm font-semibold text-gray-700">
-                                                        {videoFile ? videoFile.name : 'Click to upload video'}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 mt-1">
-                                                        MP4, MOV, etc. Max 100MB
-                                                    </p>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition-colors"
-                                        >
-                                            {isSubmitting ? 'Uploading...' : 'Submit Video Review'}
-                                        </button>
-                                    </form>
-                                )}
-                            </div>
-                        </div>
+            {/* Navigation Tabs */}
+            <section className="sticky top-32 bg-white border-b border-gray-200 z-30">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="flex gap-8">
+                        <button
+                            onClick={() => setActiveTab('reviews')}
+                            className={`py-4 px-6 font-semibold text-lg transition-colors border-b-2 ${
+                                activeTab === 'reviews'
+                                    ? 'text-green-600 border-green-600'
+                                    : 'text-gray-600 border-transparent hover:text-gray-900'
+                            }`}
+                        >
+                            Reviews
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('form')}
+                            className={`py-4 px-6 font-semibold text-lg transition-colors border-b-2 ${
+                                activeTab === 'form'
+                                    ? 'text-green-600 border-green-600'
+                                    : 'text-gray-600 border-transparent hover:text-gray-900'
+                            }`}
+                        >
+                            Leave a Review
+                        </button>
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-20 px-6 bg-green-700 text-white">
+            {/* Reviews Grid */}
+            {activeTab === 'reviews' && (
+                <section className="py-20 px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {sampleReviews.map(review => (
+                                <div key={review.id} className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow">
+                                    <div className="flex items-center mb-4">
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-bold text-gray-900">{review.name}</h3>
+                                            <p className="text-sm text-gray-500">{review.date}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-1 mb-4">
+                                        {[...Array(review.rating)].map((_, i) => (
+                                            <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                                        ))}
+                                    </div>
+
+                                    <p className="text-gray-700 leading-relaxed">
+                                        {review.review}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Review Form */}
+            {activeTab === 'form' && (
+                <section className="py-20 px-6">
+                    <div className="max-w-2xl mx-auto">
+                        <div className="bg-white rounded-lg shadow-2xl p-12">
+                            <h2 className="text-4xl font-bold mb-2 text-gray-900">
+                                Share Your Experience
+                            </h2>
+                            <p className="text-gray-600 mb-12">
+                                Your feedback helps us improve and lets other golfers know about our lessons
+                            </p>
+
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div>
+                                    <label htmlFor="name" className="block text-lg font-semibold text-gray-700 mb-2">
+                                        Your Name
+                                    </label>
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        placeholder="John Doe"
+                                        required
+                                        className="w-full px-6 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="email" className="block text-lg font-semibold text-gray-700 mb-2">
+                                        Email Address
+                                    </label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder="your@email.com"
+                                        required
+                                        className="w-full px-6 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="rating" className="block text-lg font-semibold text-gray-700 mb-2">
+                                        Rating
+                                    </label>
+                                    <div className="flex gap-2 items-center">
+                                        <select
+                                            id="rating"
+                                            name="rating"
+                                            value={formData.rating}
+                                            onChange={handleInputChange}
+                                            className="px-6 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors"
+                                        >
+                                            <option value={5}>5 Stars - Excellent</option>
+                                            <option value={4}>4 Stars - Very Good</option>
+                                            <option value={3}>3 Stars - Good</option>
+                                            <option value={2}>2 Stars - Fair</option>
+                                            <option value={1}>1 Star - Poor</option>
+                                        </select>
+                                        <div className="flex gap-1">
+                                            {[...Array(formData.rating)].map((_, i) => (
+                                                <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="review" className="block text-lg font-semibold text-gray-700 mb-2">
+                                        Your Review
+                                    </label>
+                                    <textarea
+                                        id="review"
+                                        name="review"
+                                        value={formData.review}
+                                        onChange={handleInputChange}
+                                        placeholder="Tell us about your experience with Don and the lessons..."
+                                        rows={6}
+                                        required
+                                        className="w-full px-6 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors resize-none"
+                                    ></textarea>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="videoUrl" className="block text-lg font-semibold text-gray-700 mb-2">
+                                        Video Review (Optional)
+                                    </label>
+                                    <input
+                                        id="videoUrl"
+                                        type="url"
+                                        name="videoUrl"
+                                        value={formData.videoUrl}
+                                        onChange={handleInputChange}
+                                        placeholder="https://youtu.be/... or link to your video"
+                                        className="w-full px-6 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors"
+                                    />
+                                    <p className="text-sm text-gray-500 mt-2">
+                                        Upload your video to YouTube or another platform and paste the link here
+                                    </p>
+                                </div>
+
+                                {submitStatus === 'error' && (
+                                    <div className="flex items-center gap-3 p-4 bg-red-100 border-2 border-red-400 rounded-lg">
+                                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                                        <p className="text-red-700">{errorMessage}</p>
+                                    </div>
+                                )}
+
+                                {submitStatus === 'success' && (
+                                    <div className="flex items-center gap-3 p-4 bg-green-100 border-2 border-green-400 rounded-lg">
+                                        <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                                        <p className="text-green-700">Thank you for your review! We appreciate your feedback.</p>
+                                    </div>
+                                )}
+
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-lg transition-colors text-lg"
+                                >
+                                    {isSubmitting ? 'Submitting...' : 'Submit Review'}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Trust Message */}
+            <section className="py-16 px-6 bg-gray-50">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-4xl font-bold mb-6">
-                        Become a Chip Anna Putt Student
-                    </h2>
-                    <p className="text-xl text-green-100 mb-8">
-                        Join our community of golfers improving their game with personalized online lessons
+                    <p className="text-gray-700 text-lg">
+                        We value honest feedback and use student reviews to continually improve our lessons and coaching methods.
                     </p>
-                    <a
-                        href="/lessons"
-                        className="inline-block bg-white text-green-700 font-bold py-4 px-8 rounded-lg hover:bg-green-50 transition-colors text-lg"
-                    >
-                        Learn More About Lessons
-                    </a>
                 </div>
             </section>
         </main>
