@@ -1,9 +1,16 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Mail, Phone, Calendar, Users, CheckCircle, AlertCircle } from 'lucide-react'
+import emailjs from '@emailjs/browser'
 
 export default function OnlineLessonsPage() {
+    useEffect(() => {
+        if (process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY) {
+            emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
+        }
+    }, [])
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -30,21 +37,20 @@ export default function OnlineLessonsPage() {
         setErrorMessage('')
 
         try {
-            const response = await fetch('/api/send-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: 'lesson-inquiry',
-                    data: formData
-                })
-            })
-
-            if (!response.ok) {
-                const error = await response.json()
-                throw new Error(error.error || 'Failed to send inquiry')
+            const templateParams = {
+                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
+                from_name: formData.name,
+                from_email: formData.email,
+                phone: formData.phone,
+                lesson_type: formData.lessonType,
+                message: formData.message
             }
+
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
+                process.env.NEXT_PUBLIC_EMAILJS_LESSON_TEMPLATE || 'template_lesson',
+                templateParams
+            )
 
             setSubmitStatus('success')
             setFormData({
@@ -60,7 +66,7 @@ export default function OnlineLessonsPage() {
             }, 5000)
         } catch (error) {
             setSubmitStatus('error')
-            setErrorMessage(error instanceof Error ? error.message : 'Something went wrong')
+            setErrorMessage(error instanceof Error ? error.message : 'Failed to send inquiry')
             console.error('[v0] Form submission error:', error)
         } finally {
             setIsSubmitting(false)

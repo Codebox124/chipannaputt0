@@ -80,9 +80,30 @@ const ProductCheckout = ({ description, isStorePage, product = SAMPLE_PRODUCT }:
 
         const variant = product.variants[0]
         startTransition(async () => {
-            await addItem(variant, product, quantity)
-            // Redirect to cart page
-            window.location.href = '/cart'
+            try {
+                // Create checkout directly with Shopify
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        variantId: variant.id,
+                        quantity
+                    })
+                })
+
+                const data = await response.json()
+
+                if (data.checkoutUrl) {
+                    // Redirect to Shopify checkout
+                    window.location.href = data.checkoutUrl
+                } else {
+                    console.error('[v0] No checkout URL received')
+                }
+            } catch (error) {
+                console.error('[v0] Checkout error:', error)
+            }
         })
     }
 

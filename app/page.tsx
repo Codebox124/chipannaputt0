@@ -8,6 +8,8 @@ import Putting from './components/ui/putting'
 import StoreSection from './components/ui/store-section'
 import QuoteSections from './components/ui/quote-sections'
 import IntroVideoSection from './components/ui/introVideoSection'
+import ReviewsSection from './components/home/reviews-section'
+import LessonsSection from './components/home/lessons-section'
 
 const page = () => {
   return (
@@ -44,6 +46,12 @@ const page = () => {
 
       {/* Store Section */}
       <StoreSection isStorePage={false} />
+
+      {/* Lessons Section */}
+      <LessonsSection />
+
+      {/* Reviews Section */}
+      <ReviewsSection />
 
       <QuoteSections />
 
