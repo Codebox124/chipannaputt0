@@ -62,6 +62,28 @@ ${videoUrl ? `<p><strong>Video:</strong> <a href="${videoUrl}">Watch Review</a><
 <h3>Review:</h3>
 <p>${review.replace(/\n/g, '<br>')}</p>
             `
+        } else if (type === 'lesson-inquiry') {
+            const { name, email, phone, lessonType, message } = data
+
+            emailSubject = `New Lesson Inquiry from ${name}`
+            emailText = `
+Name: ${name}
+Email: ${email}
+Phone: ${phone || 'Not provided'}
+Lesson Type: ${lessonType}
+
+Message:
+${message}
+            `
+            emailHtml = `
+<h2>New Lesson Inquiry</h2>
+<p><strong>Name:</strong> ${name}</p>
+<p><strong>Email:</strong> ${email}</p>
+<p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+<p><strong>Lesson Type:</strong> ${lessonType}</p>
+<h3>Message:</h3>
+<p>${message.replace(/\n/g, '<br>')}</p>
+            `
         } else {
             return NextResponse.json(
                 { error: 'Invalid submission type' },

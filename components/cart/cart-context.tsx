@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react'
 import { Product, ProductVariant } from '@/lib/shopify/types'
 
 interface CartItem {
@@ -24,6 +24,33 @@ const CartContext = createContext<CartContextType | null>(null)
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedCart = localStorage.getItem('chip-anna-putt-cart')
+        if (savedCart) {
+          setItems(JSON.parse(savedCart))
+        }
+      } catch (error) {
+        console.error('[v0] Failed to load cart from localStorage:', error)
+      }
+      setIsInitialized(true)
+    }
+  }, [])
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    if (isInitialized && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('chip-anna-putt-cart', JSON.stringify(items))
+      } catch (error) {
+        console.error('[v0] Failed to save cart to localStorage:', error)
+      }
+    }
+  }, [items, isInitialized])
 
   const addItem = useCallback(
     async (variant: ProductVariant, product: Product, quantity = 1) => {

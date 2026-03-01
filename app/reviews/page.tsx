@@ -130,7 +130,7 @@ export default function ReviewsPage() {
             </section>
 
             {/* Navigation Tabs */}
-            <section className="sticky top-32 bg-white border-b border-gray-200 z-30">
+            <section className="bg-white border-b border-gray-200">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="flex gap-8">
                         <button

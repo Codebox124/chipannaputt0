@@ -75,6 +75,17 @@ const ProductCheckout = ({ description, isStorePage, product = SAMPLE_PRODUCT }:
         })
     }
 
+    const handleBuyNow = () => {
+        if (product.variants.length === 0) return
+
+        const variant = product.variants[0]
+        startTransition(async () => {
+            await addItem(variant, product, quantity)
+            // Redirect to cart page
+            window.location.href = '/cart'
+        })
+    }
+
     return (
         <div>
             <div className="flex flex-col md:h-screen space-y-8 overflow-y-scroll">
@@ -128,10 +139,11 @@ const ProductCheckout = ({ description, isStorePage, product = SAMPLE_PRODUCT }:
                         {isPending ? 'Adding...' : 'Add to cart'}
                     </button>
                     <button
-                        disabled={!product.availableForSale}
+                        onClick={handleBuyNow}
+                        disabled={isPending || !product.availableForSale}
                         className="w-full py-4 px-6 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Buy it now
+                        {isPending ? 'Processing...' : 'Buy it now'}
                     </button>
                 </div>
 

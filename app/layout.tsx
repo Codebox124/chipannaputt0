@@ -31,7 +31,7 @@ export default function RootLayout({
         <ClerkProvider>
           <CartProvider>
             <Header />
-            <main className="pt-32">
+            <main>
               {children}
             </main>
             <Footer />
