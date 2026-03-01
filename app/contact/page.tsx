@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AlertCircle, CheckCircle, Mail, Phone, MapPin } from 'lucide-react'
+import emailjs from '@emailjs/browser'
 
 export default function ContactPage() {
+    useEffect(() => {
+        if (process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY) {
+            emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
+        }
+    }, [])
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -30,21 +37,20 @@ export default function ContactPage() {
         setErrorMessage('')
 
         try {
-            const response = await fetch('/api/send-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: 'contact',
-                    data: formData
-                })
-            })
-
-            if (!response.ok) {
-                const error = await response.json()
-                throw new Error(error.error || 'Failed to send message')
+            const templateParams = {
+                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
+                from_name: formData.name,
+                from_email: formData.email,
+                phone: formData.phone,
+                subject: formData.subject,
+                message: formData.message
             }
+
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
+                process.env.NEXT_PUBLIC_EMAILJS_CONTACT_TEMPLATE || 'template_contact',
+                templateParams
+            )
 
             setSubmitStatus('success')
             setFormData({
@@ -60,7 +66,7 @@ export default function ContactPage() {
             }, 5000)
         } catch (error) {
             setSubmitStatus('error')
-            setErrorMessage(error instanceof Error ? error.message : 'Something went wrong')
+            setErrorMessage(error instanceof Error ? error.message : 'Failed to send message')
             console.error('[v0] Contact form error:', error)
         } finally {
             setIsSubmitting(false)

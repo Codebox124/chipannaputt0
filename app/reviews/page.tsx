@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Star, AlertCircle, CheckCircle } from 'lucide-react'
+import emailjs from '@emailjs/browser'
 
 export default function ReviewsPage() {
+    useEffect(() => {
+        if (process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY) {
+            emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
+        }
+    }, [])
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -31,21 +38,20 @@ export default function ReviewsPage() {
         setErrorMessage('')
 
         try {
-            const response = await fetch('/api/send-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: 'review',
-                    data: formData
-                })
-            })
-
-            if (!response.ok) {
-                const error = await response.json()
-                throw new Error(error.error || 'Failed to submit review')
+            const templateParams = {
+                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
+                from_name: formData.name,
+                from_email: formData.email,
+                rating: formData.rating,
+                review: formData.review,
+                video_url: formData.videoUrl || 'No video provided'
             }
+
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
+                process.env.NEXT_PUBLIC_EMAILJS_REVIEW_TEMPLATE || 'template_review',
+                templateParams
+            )
 
             setSubmitStatus('success')
             setFormData({
@@ -62,7 +68,7 @@ export default function ReviewsPage() {
             }, 3000)
         } catch (error) {
             setSubmitStatus('error')
-            setErrorMessage(error instanceof Error ? error.message : 'Something went wrong')
+            setErrorMessage(error instanceof Error ? error.message : 'Failed to send review')
             console.error('[v0] Review submission error:', error)
         } finally {
             setIsSubmitting(false)

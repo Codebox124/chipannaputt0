@@ -2,11 +2,8 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { SearchOutlined, ShoppingOutlined, UserOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { SearchOutlined, ShoppingOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
 import { useCart } from '@/components/cart/cart-context';
-
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -171,17 +168,7 @@ const Header = () => {
                             )}
                         </Link>
 
-                        {/* User icon */}
-                        <div className='flex items-center justify-center text-2xl font-extralight'>
-                            <SignedIn>
-                                <UserButton />
-                            </SignedIn>
-                            <SignedOut>
-                                <SignInButton>
-                                    <UserOutlined />
-                                </SignInButton>
-                            </SignedOut>
-                        </div>
+
                     </div>
                 </div>
 

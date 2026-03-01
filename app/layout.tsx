@@ -3,9 +3,6 @@ import { Cabin } from "next/font/google";
 import "./globals.css";
 import Header from "./components/ui/header";
 import Footer from "./components/ui/footer";
-import {
-  ClerkProvider,
-} from '@clerk/nextjs'
 import { CartProvider } from "@/components/cart/cart-context";
 
 const cabin = Cabin({
@@ -28,15 +25,13 @@ export default function RootLayout({
       <body
         className={`${cabin.className} antialiased`}
       >
-        <ClerkProvider>
-          <CartProvider>
-            <Header />
-            <main>
-              {children}
-            </main>
-            <Footer />
-          </CartProvider>
-        </ClerkProvider>
+        <CartProvider>
+          <Header />
+          <main>
+            {children}
+          </main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );
