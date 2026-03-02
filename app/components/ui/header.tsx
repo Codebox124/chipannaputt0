@@ -2,18 +2,15 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { SearchOutlined, ShoppingOutlined, UserOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
-import useCart from '@/store';
-
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-
+import { SearchOutlined, ShoppingOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { useCart } from '@/components/cart/cart-context';
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
 
-    const cart = useCart((state) => state.cart)
+    const { items } = useCart()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     // Show header when scrolling up, hide when scrolling down
@@ -66,12 +63,13 @@ const Header = () => {
     const navLinks = [
         { name: "Home", href: "/" },
         { name: "Shop", href: "/shop" },
+        { name: "Lessons", href: "/lessons" },
+        { name: "Reviews", href: "/reviews" },
         { name: "Contact", href: "/contact" },
-        { name: "Videos", href: "/videos" },
     ]
 
     // Calculate total cart items
-    const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0)
+    const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
         <div>
@@ -170,17 +168,7 @@ const Header = () => {
                             )}
                         </Link>
 
-                        {/* User icon */}
-                        <div className='flex items-center justify-center text-2xl font-extralight'>
-                            <SignedIn>
-                                <UserButton />
-                            </SignedIn>
-                            <SignedOut>
-                                <SignInButton>
-                                    <UserOutlined />
-                                </SignInButton>
-                            </SignedOut>
-                        </div>
+
                     </div>
                 </div>
 
@@ -261,20 +249,9 @@ const Header = () => {
                                         )}
                                     </Link>
 
-                                    <SignedIn>
-                                        <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                            <UserButton />
-                                            <span>Account</span>
-                                        </button>
-                                    </SignedIn>
-                                    <SignedOut>
-                                        <SignInButton>
-                                            <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                                <UserOutlined className="text-xl" />
-                                                <span>Login</span>
-                                            </button>
-                                        </SignInButton>
-                                    </SignedOut>
+                                    <a href="https://nq5qk0-y0.myshopify.com/account" className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
+                                        <span>Account</span>
+                                    </a>
                                 </div>
                             </nav>
                         </motion.div>
