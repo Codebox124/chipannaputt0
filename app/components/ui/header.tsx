@@ -249,20 +249,9 @@ const Header = () => {
                                         )}
                                     </Link>
 
-                                    <SignedIn>
-                                        <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                            <UserButton />
-                                            <span>Account</span>
-                                        </button>
-                                    </SignedIn>
-                                    <SignedOut>
-                                        <SignInButton>
-                                            <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                                <UserOutlined className="text-xl" />
-                                                <span>Login</span>
-                                            </button>
-                                        </SignInButton>
-                                    </SignedOut>
+                                    <a href="https://nq5qk0-y0.myshopify.com/account" className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
+                                        <span>Account</span>
+                                    </a>
                                 </div>
                             </nav>
                         </motion.div>
