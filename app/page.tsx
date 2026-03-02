@@ -27,7 +27,7 @@ const page = () => {
           <h1 className='text-3xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight leading-relaxed font-meduim mb-4 sm:mb-6 md:mb-8 text-center'>Mastering the fundamentals makes a better golfer</h1>
 
           <p className='text-sm sm:text-base md:text-lg tracking-tight leading-relaxed font-normal mb-4 sm:mb-6 md:mb-8 text-center text-gray-600'>
-            That's why I created the ChipAnnaPutt Kit (named after dear old Dad, the most consistent golfer I know). When Dad missed hitting a green, he would say, "Oh well . . . chip ana putt. FEEEL the distance!" Pros will "step it off" so they can feel the distance and direction (the Double Ds).
+            That&apos;s why I created the ChipAnnaPutt Kit (named after dear old Dad, the most consistent golfer I know). When Dad missed hitting a green, he would say, &quot;Oh well . . . chip ana putt. FEEEL the distance!&quot; Pros will &quot;step it off&quot; so they can feel the distance and direction (the Double Ds).
           </p>
 
           <p className='text-sm sm:text-base md:text-lg tracking-tight leading-relaxed font-normal mb-6 sm:mb-8 md:mb-10 text-center text-gray-600'>

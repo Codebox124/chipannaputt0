@@ -74,15 +74,15 @@ export default function ContactPage() {
     }
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+        <main className="min-h-screen bg-linear-to-b from-green-50 to-white">
             {/* Hero Section */}
-            <section className="bg-gradient-to-r from-green-700 to-green-600 text-white py-20 px-6">
+            <section className="bg-linear-to-r from-green-700 to-green-600 text-white py-20 px-6">
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-5xl md:text-6xl font-bold mb-6">
                         Get In Touch
                     </h1>
                     <p className="text-xl md:text-2xl text-green-100">
-                        Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+                        Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
                     </p>
                 </div>
             </section>
@@ -100,7 +100,7 @@ export default function ContactPage() {
                             <div className="space-y-8">
                                 {/* Address */}
                                 <div className="flex items-start gap-4">
-                                    <MapPin className="w-8 h-8 text-green-600 mt-1 flex-shrink-0" />
+                                    <MapPin className="w-8 h-8 text-green-600 mt-1 shrink-0" />
                                     <div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-2">Address</h3>
                                         <p className="text-gray-700">
@@ -114,7 +114,7 @@ export default function ContactPage() {
 
                                 {/* Business Phone */}
                                 <div className="flex items-start gap-4">
-                                    <Phone className="w-8 h-8 text-green-600 mt-1 flex-shrink-0" />
+                                    <Phone className="w-8 h-8 text-green-600 mt-1 shrink-0" />
                                     <div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-2">Business Phone</h3>
                                         <a
@@ -128,7 +128,7 @@ export default function ContactPage() {
 
                                 {/* Personal Phone */}
                                 <div className="flex items-start gap-4">
-                                    <Phone className="w-8 h-8 text-green-600 mt-1 flex-shrink-0" />
+                                    <Phone className="w-8 h-8 text-green-600 mt-1 shrink-0" />
                                     <div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-2">Personal Phone</h3>
                                         <a
@@ -142,7 +142,7 @@ export default function ContactPage() {
 
                                 {/* Email */}
                                 <div className="flex items-start gap-4">
-                                    <Mail className="w-8 h-8 text-green-600 mt-1 flex-shrink-0" />
+                                    <Mail className="w-8 h-8 text-green-600 mt-1 shrink-0" />
                                     <div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-2">Email</h3>
                                         <a
@@ -244,15 +244,15 @@ export default function ContactPage() {
 
                                 {submitStatus === 'error' && (
                                     <div className="flex items-center gap-3 p-4 bg-red-100 border-2 border-red-400 rounded-lg">
-                                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                                        <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
                                         <p className="text-red-700">{errorMessage}</p>
                                     </div>
                                 )}
 
                                 {submitStatus === 'success' && (
                                     <div className="flex items-center gap-3 p-4 bg-green-100 border-2 border-green-400 rounded-lg">
-                                        <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                                        <p className="text-green-700">Thank you! We'll be in touch soon.</p>
+                                        <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />
+                                        <p className="text-green-700">Thank you! We&apos;ll be in touch soon.</p>
                                     </div>
                                 )}
 

@@ -48,7 +48,7 @@ export default function ReviewsSection() {
 
             await emailjs.send(
                 process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
-                process.env.NEXT_PUBLIC_EMAILJS_REVIEW_TEMPLATE || 'template_review',
+                process.env.NEXT_PUBLIC_EMAILJS_REVIEW_TEMPLATE || 'template_e43jcva',
                 templateParams
             )
 
@@ -67,7 +67,7 @@ export default function ReviewsSection() {
         } catch (error) {
             setSubmitStatus('error')
             setErrorMessage(error instanceof Error ? error.message : 'Failed to send review')
-            console.error('[v0] Review submission error:', error)
+            console.error('Review submission error:', error)
         } finally {
             setIsSubmitting(false)
         }
@@ -95,7 +95,7 @@ export default function ReviewsSection() {
     ]
 
     return (
-        <section className="py-20 px-6 bg-gradient-to-b from-white to-green-50">
+        <section className="py-20 px-6 bg-linear-to-b from-white to-green-50">
             <div className="max-w-6xl mx-auto">
                 <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-900">
                     Student Reviews & Testimonials

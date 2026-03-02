@@ -87,7 +87,7 @@ export default function LessonsSection() {
     ]
 
     return (
-        <section className="py-20 px-6 bg-gradient-to-b from-green-50 to-white">
+        <section className="py-20 px-6 bg-linear-to-b from-green-50 to-white">
             <div className="max-w-6xl mx-auto">
                 <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-900">
                     Online Golf Lessons
@@ -213,15 +213,15 @@ export default function LessonsSection() {
 
                             {submitStatus === 'error' && (
                                 <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-400 rounded-lg">
-                                    <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
                                     <p className="text-red-700 text-sm">{errorMessage}</p>
                                 </div>
                             )}
 
                             {submitStatus === 'success' && (
                                 <div className="flex items-center gap-2 p-3 bg-green-100 border border-green-400 rounded-lg">
-                                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-                                    <p className="text-green-700 text-sm">We'll contact you soon to confirm your lesson!</p>
+                                    <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
+                                    <p className="text-green-700 text-sm">We&apos;ll contact you soon to confirm your lesson!</p>
                                 </div>
                             )}
 
@@ -235,7 +235,7 @@ export default function LessonsSection() {
                         </form>
 
                         <p className="text-xs text-gray-500 mt-4 text-center">
-                            We'll respond within 24 hours to discuss your goals and schedule.
+                            We&apos;ll respond within 24 hours to discuss your goals and schedule.
                         </p>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ import { parseShopifyDomain } from './parse-shopify-domain'
 import { DEFAULT_PAGE_SIZE, DEFAULT_SORT_KEY } from './constants'
 
 const rawStoreDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
-const fallbackStoreDomain = 'v0-template.myshopify.com'
+const fallbackStoreDomain = 'nq5qk0-y0.myshopify.com'
 const SHOPIFY_STORE_DOMAIN = rawStoreDomain
   ? parseShopifyDomain(rawStoreDomain)
   : fallbackStoreDomain
@@ -30,6 +30,7 @@ async function shopifyFetch<T>({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': https://admin.shopify.com/?organization_id=165832924&no_redirect=true&redirect=/oauth/redirect_from_developer_dashboard?client_id%3Dfd1aa7c7ec0728d2ba4953ac33c7257e,
       },
       body: JSON.stringify({
         query,
