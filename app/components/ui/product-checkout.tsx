@@ -22,10 +22,6 @@ const SAMPLE_PRODUCT: Product = {
         minVariantPrice: {
             amount: '149.99',
             currencyCode: 'USD'
-        },
-        maxVariantPrice: {
-            amount: '149.99',
-            currencyCode: 'USD'
         }
     },
     variants: [
