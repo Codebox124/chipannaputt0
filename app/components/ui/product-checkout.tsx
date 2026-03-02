@@ -1,80 +1,141 @@
 "use client"
 
 import { ArrowRight, Minus, Plus, Share2 } from 'lucide-react'
-import useCart from '@/store'
-import { product } from '@/lib/data'
-import React, { useState } from 'react'
-import { showAddToCartToast } from './addToCartToast'
+import { useCart } from '@/components/cart/cart-context'
+import React, { useState, useTransition } from 'react'
+import { Product, ProductVariant } from '@/lib/shopify/types'
 
-const ProductCheckout = ({ description, isStorePage }: { description?: string, isStorePage: boolean }) => {
+interface ProductCheckoutProps {
+    description?: string
+    isStorePage: boolean
+    product?: Product
+}
 
-    const addToCart = useCart((state) => state.addToCart)
-    const cartItems = useCart((state) => state.cart)
-    const total = useCart((state) => state.total)
-    const updateCart = useCart((state) => state.updateCart)
-    const removeFromCart = useCart((state) => state.removeFromCart)
+// Sample product for demo purposes
+const SAMPLE_PRODUCT: Product = {
+    id: 'gid://shopify/Product/1',
+    title: 'Chip Anna Putt Kit',
+    description: '',
+    handle: 'chip-anna-putt-kit',
+    availableForSale: true,
+    priceRange: {
+        minVariantPrice: {
+            amount: '149.99',
+            currencyCode: 'USD'
+        }
+    },
+    variants: [
+        {
+            id: 'gid://shopify/ProductVariant/1',
+            title: 'Default Variant',
+            availableForSale: true,
+            selectedOptions: [],
+            price: {
+                amount: '149.99',
+                currencyCode: 'USD'
+            }
+        } as ProductVariant
+    ]
+}
 
+const ProductCheckout = ({ description, isStorePage, product = SAMPLE_PRODUCT }: ProductCheckoutProps) => {
+    const { items, addItem } = useCart()
     const [quantity, setQuantity] = useState<number>(1)
+    const [isPending, startTransition] = useTransition()
+    const [showMessage, setShowMessage] = useState(false)
+
+    const cartItem = items.find((item) => item.product.id === product.id)
+    const currentQuantity = cartItem?.quantity || 0
 
     const increment = () => {
-        if (isStorePage) {
-            // Update the quantity directly in the zustand store
-            updateCart({ ...product, quantity: quantity + 1 })
-        } else {
+        if (quantity > 0) {
             setQuantity((prev) => prev + 1)
         }
     }
 
     const decrement = () => {
-        if (isStorePage && quantity > 0) {
-            // Update the quantity directly in the zustand store
-            updateCart({ ...product, quantity: quantity - 1 })
-        } else {
-            if (quantity > 0) {
-                setQuantity((prev) => prev - 1)
-            }
+        if (quantity > 1) {
+            setQuantity((prev) => prev - 1)
         }
     }
 
     const handleAddToCart = () => {
+        if (product.variants.length === 0) return
 
-        const item = cartItems.find((item) => item.id === product.id)
+        const variant = product.variants[0]
+        startTransition(async () => {
+            await addItem(variant, product, quantity)
+            setShowMessage(true)
+            setQuantity(1)
+            setTimeout(() => setShowMessage(false), 2000)
+        })
+    }
 
-        if (item) {
-            updateCart({ ...product, quantity: item.quantity + quantity })
-        } else {
-            addToCart({ ...product, quantity }, quantity)
-        }
+    const handleBuyNow = () => {
+        if (product.variants.length === 0) return
 
-        showAddToCartToast({ product, quantity, cartCount: cartItems.length })
+        const variant = product.variants[0]
+        startTransition(async () => {
+            try {
+                // Create checkout directly with Shopify
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        variantId: variant.id,
+                        quantity
+                    })
+                })
+
+                const data = await response.json()
+
+                if (data.checkoutUrl) {
+                    // Redirect to Shopify checkout
+                    window.location.href = data.checkoutUrl
+                } else {
+                    console.error('[v0] No checkout URL received')
+                }
+            } catch (error) {
+                console.error('[v0] Checkout error:', error)
+            }
+        })
     }
 
     return (
         <div>
             <div className="flex flex-col md:h-screen space-y-8 overflow-y-scroll">
                 <header>
-                    <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">My Store</p>
+                    <p className="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-2">Golf Shop</p>
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                        Chip Anna Putt Kit
+                        {product.title}
                     </h1>
                 </header>
 
                 <div className="text-2xl font-medium text-gray-700">
-                    $149.99 USD
+                    {product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}
                 </div>
+
+                {showMessage && (
+                    <div className="p-4 bg-green-100 text-green-800 rounded-lg font-semibold">
+                        ✓ Added to cart!
+                    </div>
+                )}
 
                 <div className="space-y-4">
                     <label className="text-sm text-gray-600 font-medium">Quantity</label>
                     <div className="flex items-center border border-gray-300 rounded w-fit bg-white">
                         <button
                             onClick={decrement}
-                            className="p-3 hover:bg-gray-50 transition-colors"
+                            disabled={quantity <= 1}
+                            className="p-3 hover:bg-gray-50 transition-colors disabled:opacity-50"
                             aria-label="Decrease quantity"
                         >
                             <Minus size={18} />
                         </button>
                         <span className="px-8 py-2 font-medium text-lg min-w-12 text-center">
-                            {isStorePage ? cartItems.find((item) => item.id === product.id)?.quantity : quantity}
+                            {quantity}
                         </span>
                         <button
                             onClick={increment}
@@ -87,11 +148,19 @@ const ProductCheckout = ({ description, isStorePage }: { description?: string, i
                 </div>
 
                 <div className="flex flex-col gap-3">
-                    <button onClick={handleAddToCart} className="w-full py-4 px-6 border border-black rounded-full font-medium hover:bg-black hover:text-white transition-all duration-300">
-                        Add to cart
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={isPending || !product.availableForSale}
+                        className="w-full py-4 px-6 border border-black rounded-full font-medium hover:bg-black hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isPending ? 'Adding...' : 'Add to cart'}
                     </button>
-                    <button className="w-full py-4 px-6 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-all duration-300 shadow-md">
-                        Buy it now
+                    <button
+                        onClick={handleBuyNow}
+                        disabled={isPending || !product.availableForSale}
+                        className="w-full py-4 px-6 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isPending ? 'Processing...' : 'Buy it now'}
                     </button>
                 </div>
 

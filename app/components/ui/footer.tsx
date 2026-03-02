@@ -55,40 +55,50 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Email Subscription Section */}
+                {/* Quick Links Section */}
+                <div className="text-center mb-16 pb-12 border-b border-white/30">
+                    <h3 className="text-2xl font-semibold mb-6">Quick Links</h3>
+                    <div className="flex flex-wrap justify-center items-center gap-8">
+                        <a href="/reviews" className="hover:text-white/80 transition-colors text-lg">
+                            Student Reviews
+                        </a>
+                        <a href="/contact" className="hover:text-white/80 transition-colors text-lg">
+                            Contact Us
+                        </a>
+                        <a href="/lessons" className="hover:text-white/80 transition-colors text-lg">
+                            Lessons
+                        </a>
+                        <a href="/shop" className="hover:text-white/80 transition-colors text-lg">
+                            Shop
+                        </a>
+                    </div>
+                </div>
+
+                {/* Company Contact Information */}
                 <div className="text-center">
-                    <h3 className="text-2xl font-semibold mb-6">Subscribe to our emails</h3>
-                    <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-                        <div className="relative flex items-center border border-white/30 rounded-sm overflow-hidden bg-transparent">
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Email"
-                                required
-                                className="flex-1 bg-transparent px-4 py-3 text-white placeholder-white/70 focus:outline-none"
-                            />
-                            <button
-                                type="submit"
-                                className="px-4 py-3 hover:bg-white/10 transition-colors"
-                                aria-label="Subscribe"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M5 12h14M12 5l7 7-7 7" />
-                                </svg>
-                            </button>
+                    <h3 className="text-2xl font-semibold mb-8">Contact Us</h3>
+                    <div className="space-y-4 text-lg">
+                        <div>
+                            <p className="font-semibold text-xl mb-2">Chip Anna Putt</p>
+                            <p>in the care of Don Sheppard</p>
+                            <p className="mt-4">1013 Bingham Ave.</p>
+                            <p>Janesville, WI 53546</p>
                         </div>
-                    </form>
+                        <div className="pt-4 space-y-2">
+                            <div>
+                                <p className="text-white/80">Business Phone</p>
+                                <a href="tel:608-530-8582" className="hover:text-white/70 transition-colors">
+                                    608-530-8582
+                                </a>
+                            </div>
+                            <div>
+                                <p className="text-white/80">Don's Personal Phone</p>
+                                <a href="tel:608-359-1581" className="hover:text-white/70 transition-colors">
+                                    608-359-1581
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>

@@ -3,10 +3,7 @@ import { Cabin } from "next/font/google";
 import "./globals.css";
 import Header from "./components/ui/header";
 import Footer from "./components/ui/footer";
-import AddToCartToast from "./components/ui/addToCartToast";
-import {
-  ClerkProvider,
-} from '@clerk/nextjs'
+import { CartProvider } from "@/components/cart/cart-context";
 
 const cabin = Cabin({
   subsets: ["latin"],
@@ -28,12 +25,13 @@ export default function RootLayout({
       <body
         className={`${cabin.className} antialiased`}
       >
-        <ClerkProvider>
+        <CartProvider>
           <Header />
-          {children}
-          <AddToCartToast />
+          <main>
+            {children}
+          </main>
           <Footer />
-        </ClerkProvider>
+        </CartProvider>
       </body>
     </html>
   );
