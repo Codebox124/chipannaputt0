@@ -74,7 +74,7 @@ export default function OnlineLessonsPage() {
     }
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+        <main className="min-h-screen mt-40 bg-gradient-to-b from-green-50 to-white">
             {/* Hero Section */}
             <section className="bg-gradient-to-r from-green-700 to-green-600 text-white py-20 px-6">
                 <div className="max-w-4xl mx-auto text-center">

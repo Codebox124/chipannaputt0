@@ -74,7 +74,7 @@ export default function ContactPage() {
     }
 
     return (
-        <main className="min-h-screen bg-linear-to-b from-green-50 to-white">
+        <main className="min-h-screen mt-40 bg-linear-to-b from-green-50 to-white">
             {/* Hero Section */}
             <section className="bg-linear-to-r from-green-700 to-green-600 text-white py-20 px-6">
                 <div className="max-w-4xl mx-auto text-center">
