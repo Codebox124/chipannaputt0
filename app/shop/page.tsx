@@ -3,7 +3,7 @@ import StoreSection from '../components/ui/store-section'
 
 const page = () => {
     return (
-        <div className='mt-20'>
+        <div className='mt-40'>
             <StoreSection />
         </div>
     )
