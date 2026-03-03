@@ -39,10 +39,10 @@ export default function LessonsSection() {
         try {
             const templateParams = {
                 to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                from_name: formData.name,
-                from_email: formData.email,
+                name: formData.name,
+                email: formData.email,
                 phone: formData.phone,
-                lesson_type: formData.lessonType,
+                lessonType: formData.lessonType,
                 message: formData.message
             }
 

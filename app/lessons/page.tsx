@@ -39,10 +39,10 @@ export default function OnlineLessonsPage() {
         try {
             const templateParams = {
                 to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                from_name: formData.name,
-                from_email: formData.email,
+                name: formData.name,
+                email: formData.email,
                 phone: formData.phone,
-                lesson_type: formData.lessonType,
+                lessonType: formData.lessonType,
                 message: formData.message
             }
 
@@ -185,7 +185,7 @@ export default function OnlineLessonsPage() {
                     <p className="text-center text-gray-700 mb-12 text-lg">
                         Schedule your lesson directly through Calendly. Choose a time that works best for you.
                     </p>
-                    
+
                     <div className="bg-white rounded-lg shadow-lg p-8">
                         <iframe
                             src="https://calendly.com/chipannaputt8/30min?hide_event_type_details=1&hide_gdpr_banner=1"

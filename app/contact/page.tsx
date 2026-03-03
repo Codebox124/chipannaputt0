@@ -39,8 +39,8 @@ export default function ContactPage() {
         try {
             const templateParams = {
                 to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                from_name: formData.name,
-                from_email: formData.email,
+                name: formData.name,
+                email: formData.email,
                 phone: formData.phone,
                 subject: formData.subject,
                 message: formData.message
