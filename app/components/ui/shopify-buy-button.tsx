@@ -1,63 +1,188 @@
-"use client"
+// components/ShopifyBuyButton.tsx
+'use client'
 
-import React, { useEffect, useRef } from 'react'
-import { useShopify } from './shopify-provider'
+import { useEffect } from 'react'
 
-interface ShopifyBuyButtonProps {
-    productId: string
-}
-
-const ShopifyBuyButton: React.FC<ShopifyBuyButtonProps> = ({ productId }) => {
-    const containerRef = useRef<HTMLDivElement>(null)
-    const { ui, isLoaded } = useShopify() || {}
-    const isComponentCreated = useRef(false)
-
+export default function ShopifyBuyButton() {
     useEffect(() => {
-        if (!isLoaded || !ui || !containerRef.current || isComponentCreated.current) return
+        const scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js'
+        
+        function loadScript() {
+            const script = document.createElement('script')
+            script.async = true
+            script.src = scriptURL
+            document.head.appendChild(script)
+            script.onload = ShopifyBuyInit
+        }
 
-        const renderButton = () => {
-            if (!containerRef.current || isComponentCreated.current) return
+        function ShopifyBuyInit() {
+            const client = (window as any).ShopifyBuy.buildClient({
+                domain: 'nq5qk0-y0.myshopify.com',
+                storefrontAccessToken: '655b2a344880b20aae83f89babd0884c',
+            })
 
-            ui.createComponent('product', {
-                id: productId,
-                node: containerRef.current,
-                moneyFormat: '%24%7B%7Bamount%7D%7D',
-                options: {
-                    "product": {
-                        "styles": {
-                            "button": {
-                                ":hover": { "background-color": "#000000" },
-                                "background-color": "#000000",
-                                ":focus": { "background-color": "#000000" }
+            ;(window as any).ShopifyBuy.UI.onReady(client).then(function (ui: any) {
+                ui.createComponent('product', {
+                    id: '7247127380101',
+                    node: document.getElementById('product-component-1772577405689'),
+                    moneyFormat: '%24%7B%7Bamount%7D%7D',
+                    options: {
+                        "product": {
+                            "styles": {
+                                "product": {
+                                    "@media (min-width: 601px)": {
+                                        "max-width": "100%",
+                                        "margin-left": "0",
+                                        "margin-bottom": "50px"
+                                    },
+                                    "text-align": "left"
+                                },
+                                "title": {
+                                    "font-size": "26px"
+                                },
+                                "button": {
+                                    ":hover": {
+                                        "background-color": "#000000"
+                                    },
+                                    "background-color": "#000000",
+                                    ":focus": {
+                                        "background-color": "#000000"
+                                    }
+                                },
+                                "price": {
+                                    "font-size": "18px"
+                                },
+                                "compareAt": {
+                                    "font-size": "15.299999999999999px"
+                                },
+                                "unitPrice": {
+                                    "font-size": "15.299999999999999px"
+                                }
+                            },
+                            "layout": "horizontal",
+                            "contents": {
+                                "img": false,
+                                "imgWithCarousel": true,
+                                "button": false,
+                                "buttonWithQuantity": true,
+                                "description": true
+                            },
+                            "width": "100%",
+                            "text": {
+                                "button": "Add to cart"
                             }
                         },
-                        "width": "100%",
-                        "text": { "button": "Add to cart" }
-                    },
-                    "cart": {
-                        "styles": {
-                            "button": {
-                                ":hover": { "background-color": "#000000" },
-                                "background-color": "#000000",
-                                ":focus": { "background-color": "#000000" }
+                        "productSet": {
+                            "styles": {
+                                "products": {
+                                    "@media (min-width: 601px)": {
+                                        "margin-left": "-20px"
+                                    }
+                                }
+                            }
+                        },
+                        "modalProduct": {
+                            "contents": {
+                                "img": false,
+                                "imgWithCarousel": true,
+                                "button": false,
+                                "buttonWithQuantity": true
+                            },
+                            "styles": {
+                                "product": {
+                                    "@media (min-width: 601px)": {
+                                        "max-width": "100%",
+                                        "margin-left": "0px",
+                                        "margin-bottom": "0px"
+                                    }
+                                },
+                                "button": {
+                                    ":hover": {
+                                        "background-color": "#000000"
+                                    },
+                                    "background-color": "#000000",
+                                    ":focus": {
+                                        "background-color": "#000000"
+                                    }
+                                },
+                                "title": {
+                                    "font-family": "Helvetica Neue, sans-serif",
+                                    "font-weight": "bold",
+                                    "font-size": "26px",
+                                    "color": "#4c4c4c"
+                                },
+                                "price": {
+                                    "font-family": "Helvetica Neue, sans-serif",
+                                    "font-weight": "normal",
+                                    "font-size": "18px",
+                                    "color": "#4c4c4c"
+                                },
+                                "compareAt": {
+                                    "font-family": "Helvetica Neue, sans-serif",
+                                    "font-weight": "normal",
+                                    "font-size": "15.299999999999999px",
+                                    "color": "#4c4c4c"
+                                },
+                                "unitPrice": {
+                                    "font-family": "Helvetica Neue, sans-serif",
+                                    "font-weight": "normal",
+                                    "font-size": "15.299999999999999px",
+                                    "color": "#4c4c4c"
+                                }
+                            },
+                            "text": {
+                                "button": "Add to cart"
+                            }
+                        },
+                        "option": {
+                            
+                        },
+                        "cart": {
+                            "styles": {
+                                "button": {
+                                    ":hover": {
+                                        "background-color": "#000000"
+                                    },
+                                    "background-color": "#000000",
+                                    ":focus": {
+                                        "background-color": "#000000"
+                                    }
+                                }
+                            },
+                            "text": {
+                                "total": "Subtotal",
+                                "button": "Checkout"
+                            }
+                        },
+                        "toggle": {
+                            
+                            "styles": {
+                                "toggle": {
+                                    "background-color": "#000000",
+                                    ":hover": {
+                                        "background-color": "#000000"
+                                    },
+                                    ":focus": {
+                                        "background-color": "#000000"
+                                    }
+                                }
                             }
                         }
-                    }
-                },
+                    },
+                })
             })
-            isComponentCreated.current = true
         }
 
-        renderButton()
-
-        // Cleanup if component unmounts
-        return () => {
-            isComponentCreated.current = false
-            if (containerRef.current) containerRef.current.innerHTML = ""
+        if ((window as any).ShopifyBuy) {
+            if ((window as any).ShopifyBuy.UI) {
+                ShopifyBuyInit()
+            } else {
+                loadScript()
+            }
+        } else {
+            loadScript()
         }
-    }, [productId, ui, isLoaded])
+    }, [])
 
-    return <div ref={containerRef} id={`product-component-${productId}`} className="w-full min-h-[50px] flex items-center justify-center" />
+    return <div id='product-component-1772577405689'></div>
 }
-
-export default ShopifyBuyButton

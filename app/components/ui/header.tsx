@@ -2,44 +2,26 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Search } from 'lucide-react';
-import React, { useState, useEffect } from 'react'
+import { Menu, X, Search, ShoppingCart } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-    // Show header when scrolling up, hide when scrolling down
     const [hidden, setHidden] = useState(false)
 
     useEffect(() => {
         let lastScrollY = window.scrollY;
-
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-
-            // Scrolling down (moving towards bottom of page)
-            if (currentScrollY > lastScrollY && currentScrollY > 150) {
-                setHidden(true);
-            }
-            // Scrolling up (moving towards top of page)
-            else if (currentScrollY < lastScrollY) {
-                setHidden(false);
-            }
-            // At the very top of the page
-            if (currentScrollY < 10) {
-                setHidden(false);
-            }
-
+            if (currentScrollY > lastScrollY && currentScrollY > 150) setHidden(true);
+            else if (currentScrollY < lastScrollY) setHidden(false);
+            if (currentScrollY < 10) setHidden(false);
             lastScrollY = currentScrollY;
         };
-
         window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // Close mobile menu when route changes
@@ -65,6 +47,12 @@ const Header = () => {
         { name: "Contact", href: "/contact" },
     ]
 
+    // Function to open Shopify cart
+    const openShopifyCart = () => {
+        if (typeof window !== 'undefined' && window.openShopifyCart) {
+            window.openShopifyCart()
+        }
+    }
 
     return (
         <div>
@@ -83,7 +71,6 @@ const Header = () => {
             <header
                 style={{
                     top: hidden ? '0' : '32px',
-                    transform: hidden ? 'translateY(-100%)' : 'translateY(0)',
                     transition: 'top 0.3s ease-in-out'
                 }}
                 className='w-full p-4 sm:p-4 md:p-5 px-9 sm:px-8 md:px-12 lg:px-16 bg-white fixed left-0 right-0 z-50 shadow-sm'>
@@ -110,8 +97,14 @@ const Header = () => {
                             <Search size={22} strokeWidth={1.5} />
                         </button>
 
-                        {/* Shopify Cart Toggle */}
-                        <div id="shopify-cart-toggle-mobile" className="w-10 h-10 flex items-center justify-center" />
+                        {/* Cart Icon */}
+                        <button
+                            onClick={openShopifyCart}
+                            className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center relative'
+                            aria-label="Shopping cart"
+                        >
+                            <ShoppingCart size={22} strokeWidth={1.5} />
+                        </button>
                     </div>
                 </div>
 
@@ -148,8 +141,14 @@ const Header = () => {
                             <Search size={24} strokeWidth={1.5} />
                         </button>
 
-                        {/* Shopify Cart Toggle */}
-                        <div id="shopify-cart-toggle-desktop" className='w-11 h-11 flex items-center justify-center' />
+                        {/* Cart Icon */}
+                        <button
+                            onClick={openShopifyCart}
+                            className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center relative'
+                            aria-label="Shopping cart"
+                        >
+                            <ShoppingCart size={24} strokeWidth={1.5} />
+                        </button>
                     </div>
                 </div>
 
@@ -214,7 +213,13 @@ const Header = () => {
                                         <span>Search</span>
                                     </button>
 
-                                    <div id="shopify-cart-toggle-menu" className="w-full" />
+                                    <button
+                                        onClick={openShopifyCart}
+                                        className="w-full flex items-center gap-4 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
+                                    >
+                                        <ShoppingCart size={20} strokeWidth={1.5} />
+                                        <span>View Cart</span>
+                                    </button>
 
                                     <a href="https://nq5qk0-y0.myshopify.com/account" className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
                                         <span>Account</span>

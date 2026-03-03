@@ -45,7 +45,7 @@ const page = () => {
       <Putting />
 
       {/* Store Section */}
-      <StoreSection isStorePage={false} />
+      <StoreSection />
 
       {/* Lessons Section */}
       <LessonsSection />
