@@ -49,11 +49,12 @@ const Header = () => {
 
     // Function to open Shopify cart
     const openShopifyCart = () => {
-        if (typeof window !== 'undefined' && window.openShopifyCart) {
-            window.openShopifyCart()
+        // Access the Shopify Buy Button cart toggle
+        document.getElementById('custom-cart-toggle')?.addEventListener('click', () => {
+            (window as any).ShopifyBuy.UI.toggleCart()
         }
+        )
     }
-
     return (
         <div>
             {/* The green info header at the top of page - hides when scrolling */}

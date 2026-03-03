@@ -21,10 +21,13 @@ export default function ShopifyBuyButton() {
                 storefrontAccessToken: '655b2a344880b20aae83f89babd0884c',
             })
 
-            ;(window as any).ShopifyBuy.UI.onReady(client).then(function (ui: any) {
+            const ui = (window as any).ShopifyBuy.UI.init(client);
+
+            ;(window as any).ShopifyBuy.UI.onReady(client).then(function () {
                 ui.createComponent('product', {
                     id: '7247127380101',
                     node: document.getElementById('product-component-1772577405689'),
+                    toggles: [{ node: document.getElementById('custom-cart-toggle') }],
                     moneyFormat: '%24%7B%7Bamount%7D%7D',
                     options: {
                         "product": {
