@@ -7,7 +7,7 @@ import {
 } from './types'
 
 import { parseShopifyDomain } from './parse-shopify-domain'
-import { DEFAULT_PAGE_SIZE, DEFAULT_SORT_KEY } from './constants'
+import { DEFAULT_PAGE_SIZE, DEFAULT_SORT_KEY, DEFAULT_COLLECTION_SORT_KEY } from './constants'
 
 const rawStoreDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
 const fallbackStoreDomain = 'nq5qk0-y0.myshopify.com'
@@ -30,7 +30,7 @@ async function shopifyFetch<T>({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': https://admin.shopify.com/?organization_id=165832924&no_redirect=true&redirect=/oauth/redirect_from_developer_dashboard?client_id%3Dfd1aa7c7ec0728d2ba4953ac33c7257e,
+        'X-Shopify-Storefront-Access-Token': process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? '',
       },
       body: JSON.stringify({
         query,
@@ -257,7 +257,7 @@ export async function getCollections(first = 10): Promise<ShopifyCollection[]> {
 export async function getCollectionProducts({
   collection,
   limit = DEFAULT_PAGE_SIZE,
-  sortKey = DEFAULT_SORT_KEY,
+  sortKey = DEFAULT_COLLECTION_SORT_KEY,
   query: searchQuery,
   reverse = false,
 }: {

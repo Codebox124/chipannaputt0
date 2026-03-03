@@ -8,6 +8,7 @@ import { Product, ProductVariant } from '@/lib/shopify/types'
 interface ProductCheckoutProps {
     description?: string
     productHandle?: string  // Pass the handle to fetch
+    isStorePage?: boolean
 }
 
 const ProductCheckout = ({ description, productHandle = '7247127380101' }: ProductCheckoutProps) => {
@@ -25,11 +26,11 @@ const ProductCheckout = ({ description, productHandle = '7247127380101' }: Produ
             try {
                 setLoading(true)
                 const response = await fetch(`/api/products/${productHandle}`)
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch product')
                 }
-                
+
                 const data = await response.json()
                 setProduct(data.product)
             } catch (err) {
@@ -110,8 +111,8 @@ const ProductCheckout = ({ description, productHandle = '7247127380101' }: Produ
         return (
             <div className="flex flex-col md:h-screen items-center justify-center">
                 <p className="text-red-600 mb-4">{error || 'Product not found'}</p>
-                <button 
-                    onClick={() => window.location.reload()} 
+                <button
+                    onClick={() => window.location.reload()}
                     className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
                 >
                     Try Again
