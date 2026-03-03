@@ -2,15 +2,12 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { SearchOutlined, ShoppingOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
-import { useCart } from '@/components/cart/cart-context';
+import { Menu, X, Search } from 'lucide-react';
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
-
-    const { items } = useCart()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     // Show header when scrolling up, hide when scrolling down
@@ -68,8 +65,6 @@ const Header = () => {
         { name: "Contact", href: "/contact" },
     ]
 
-    // Calculate total cart items
-    const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
         <div>
@@ -95,13 +90,12 @@ const Header = () => {
 
                 {/* Mobile Layout: Menu | Logo | Icons */}
                 <div className='lg:hidden flex items-center justify-between w-full'>
-                    {/* Left: Mobile Menu Icon */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className='w-max h-max flex items-center justify-center text-2xl font-extralight'
+                        className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center'
                         aria-label="Toggle menu"
                     >
-                        {mobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
+                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
 
                     {/* Center: Logo */}
@@ -110,21 +104,14 @@ const Header = () => {
                     </Link>
 
                     {/* Right: Search & Cart Icons */}
-                    <div className='flex items-center gap-4 sm:gap-5'>
+                    <div className='flex items-center gap-2 sm:gap-4'>
                         {/* Search icon */}
-                        <button className='flex items-center justify-center text-xl font-extralight'>
-                            <SearchOutlined />
+                        <button className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center' aria-label="Search">
+                            <Search size={22} strokeWidth={1.5} />
                         </button>
 
-                        {/* Cart icon */}
-                        <Link href="/cart" className='flex items-center justify-center text-xl font-extralight relative'>
-                            <ShoppingOutlined />
-                            {totalCartItems > 0 && (
-                                <span className='absolute -top-2 -right-2 min-w-[20px] h-5 bg-black rounded-full flex items-center justify-center text-xs text-white px-1.5 font-semibold'>
-                                    {totalCartItems > 9 ? '9+' : totalCartItems}
-                                </span>
-                            )}
-                        </Link>
+                        {/* Shopify Cart Toggle */}
+                        <div id="shopify-cart-toggle-mobile" className="w-10 h-10 flex items-center justify-center" />
                     </div>
                 </div>
 
@@ -138,37 +125,31 @@ const Header = () => {
                         </Link>
 
                         {/* Desktop Links */}
-                        <div className='flex items-center justify-center text-gray-600 font-medium text-base lg:text-lg'>
-                            <ul className='flex items-center justify-center gap-4 lg:gap-8'>
+                        <nav className='flex items-center text-gray-600 font-medium text-base lg:text-lg'>
+                            <ul className='flex items-center gap-6 lg:gap-10'>
                                 {navLinks.map((link) => (
                                     <li key={link.name}>
-                                        <Link href={link.href} className={currentUrl === link.href ? " underline" : ""}>
+                                        <Link
+                                            href={link.href}
+                                            className={`hover:text-black transition-colors ${currentUrl === link.href ? "text-black font-semibold border-b-2 border-black" : ""}`}
+                                        >
                                             {link.name}
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                        </nav>
                     </div>
 
                     {/* Desktop Icons */}
-                    <div className='flex items-center gap-6 text-black'>
+                    <div className='flex items-center gap-3 text-black'>
                         {/* Search icon */}
-                        <div className='flex items-center justify-center text-2xl font-extralight'>
-                            <SearchOutlined />
-                        </div>
+                        <button className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center' aria-label="Search">
+                            <Search size={24} strokeWidth={1.5} />
+                        </button>
 
-                        {/* Cart icon */}
-                        <Link href="/cart" className='flex items-center justify-center text-2xl font-extralight relative'>
-                            <ShoppingOutlined />
-                            {totalCartItems > 0 && (
-                                <span className='absolute -top-2 -right-2 min-w-[20px] h-5 bg-black rounded-full flex items-center justify-center text-xs text-white px-1.5 font-semibold'>
-                                    {totalCartItems > 9 ? '9+' : totalCartItems}
-                                </span>
-                            )}
-                        </Link>
-
-
+                        {/* Shopify Cart Toggle */}
+                        <div id="shopify-cart-toggle-desktop" className='w-11 h-11 flex items-center justify-center' />
                     </div>
                 </div>
 
@@ -195,14 +176,13 @@ const Header = () => {
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                             className="fixed top-0 right-0 h-full w-[280px] sm:w-[320px] bg-white z-50 shadow-2xl lg:hidden"
                         >
-                            {/* Menu Header */}
-                            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                                <h2 className="text-xl font-bold text-gray-900">Menu</h2>
+                            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                                <h2 className="text-xl font-bold text-gray-900 tracking-tight">Menu</h2>
                                 <button
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="text-2xl text-gray-600 hover:text-gray-900"
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                                 >
-                                    <CloseOutlined />
+                                    <X size={24} />
                                 </button>
                             </div>
 
@@ -229,25 +209,12 @@ const Header = () => {
 
                                 {/* Additional Mobile Menu Items */}
                                 <div className="space-y-1">
-                                    <button className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                        <SearchOutlined className="text-xl" />
+                                    <button className="w-full flex items-center gap-4 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
+                                        <Search size={20} strokeWidth={1.5} />
                                         <span>Search</span>
                                     </button>
 
-                                    <Link
-                                        href="/cart"
-                                        className="w-full flex items-center justify-between py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <ShoppingOutlined className="text-xl" />
-                                            <span>Cart</span>
-                                        </div>
-                                        {totalCartItems > 0 && (
-                                            <span className="bg-black text-white text-sm font-semibold px-2.5 py-0.5 rounded-full">
-                                                {totalCartItems}
-                                            </span>
-                                        )}
-                                    </Link>
+                                    <div id="shopify-cart-toggle-menu" className="w-full" />
 
                                     <a href="https://nq5qk0-y0.myshopify.com/account" className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
                                         <span>Account</span>

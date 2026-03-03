@@ -3,7 +3,7 @@ import { Cabin } from "next/font/google";
 import "./globals.css";
 import Header from "./components/ui/header";
 import Footer from "./components/ui/footer";
-import { CartProvider } from "@/components/cart/cart-context";
+import { ShopifyProvider } from "./components/ui/shopify-provider";
 
 const cabin = Cabin({
   subsets: ["latin"],
@@ -25,13 +25,13 @@ export default function RootLayout({
       <body
         className={`${cabin.className} antialiased`}
       >
-        <CartProvider>
+        <ShopifyProvider>
           <Header />
           <main>
             {children}
           </main>
           <Footer />
-        </CartProvider>
+        </ShopifyProvider>
       </body>
     </html>
   );
