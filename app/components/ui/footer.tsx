@@ -71,6 +71,12 @@ const Footer = () => {
                         <a href="/shop" className="hover:text-white/80 transition-colors text-lg">
                             Shop
                         </a>
+                        <a href="/join" className="hover:text-white/80 transition-colors text-lg font-bold">
+                            Join Event
+                        </a>
+                        <a href="/donate" className="hover:text-white/80 transition-colors text-lg font-bold">
+                            Donate
+                        </a>
                     </div>
                 </div>
 

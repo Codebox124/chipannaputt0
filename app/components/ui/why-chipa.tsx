@@ -1,21 +1,34 @@
+"use client"
+
 import Image from 'next/image'
 import React from 'react'
+import { motion } from 'framer-motion'
 
 const WhyChipa = () => {
     return (
-        <div className=' md:h-screen h-full w-full relative'>
+        <div className='w-full relative min-h-[60vh] md:h-screen flex items-center justify-center overflow-hidden'>
 
-            {/* Bg Image */}
-            <Image src="/images/whychipa.png" alt="Why Chipa" width={1920} height={1080} className='w-full md:h-full h-[50vh] object-cover z-0' />
-
-            {/* Content */}
-            <div className='md:absolute relative top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] h-max py-6 pb-0 sm:py-8 md:py-10 bg-white text-black px-6 sm:px-8 md:px-12 lg:px-16 box-content'>
-
-                <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight leading-relaxed text-center mb-3 sm:mb-4'>Why Chip Anna Putt?</h1>
-
-                <p className='text-sm sm:text-base md:text-lg text-center tracking-tight leading-relaxed font-extralight text-gray-500'>Why is our putting aid the best? It covers all the fundamentals of putting. direction, distance, pushes, pulls, putter head squareness to the target reading the greens.</p>
-
+            {/* Bg Image with Overlay */}
+            <div className="absolute inset-0 z-0">
+                <Image src="/images/whychipa.png" alt="Why Chipa" width={1920} height={1080} className='w-full h-full object-cover' />
+                <div className="absolute inset-0 bg-black/40" />
             </div>
+
+            {/* Content Card */}
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className='relative z-10 w-[90%] max-w-2xl bg-white/95 backdrop-blur-md p-8 sm:p-12 md:p-16 rounded-[40px] shadow-2xl'
+            >
+                <h2 className='text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-center mb-6 text-gray-900'>
+                    Why Chip Anna Putt?
+                </h2>
+
+                <p className='text-base sm:text-lg md:text-xl text-center leading-relaxed font-medium text-gray-600'>
+                    Why is our putting aid the best? Because it covers all the <span className="text-green-600 font-bold">fundamentals</span>. Direction, distance, head squareness, and green reading - everything you need to dominate the short game.
+                </p>
+            </motion.div>
 
         </div>
     )

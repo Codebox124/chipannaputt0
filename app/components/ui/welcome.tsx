@@ -13,23 +13,34 @@ const Welcome = () => {
     setVideoPlaying(true)
   }
   return (
-    <div className=' w-full p-6 sm:p-8 md:p-12 lg:p-16'>
+    <div className='w-full py-16 px-6 sm:px-10 md:px-16'>
 
-      <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight leading-relaxed font-meduim mb-4 sm:mb-6 md:mb-8'>Welcome to Chip Anna Putt</h1>
+      <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter font-black mb-10 text-center italic'>
+        Welcome to Chip Anna Putt
+      </h2>
 
-      <div className=' relative h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-screen'>
+      <div className='relative max-w-6xl mx-auto aspect-video rounded-[32px] overflow-hidden shadow-2xl bg-black group'>
         {/* Video */}
-        <video src="https://chipannaputt.com/cdn/shop/videos/c/vp/48c213140c3547c082d0828025d1878e/48c213140c3547c082d0828025d1878e.HD-1080p-7.2Mbps-56113994.mp4?v=0" loop controls className='w-full h-full object-cover' />
+        <video
+          src="https://chipannaputt.com/cdn/shop/videos/c/vp/48c213140c3547c082d0828025d1878e/48c213140c3547c082d0828025d1878e.HD-1080p-7.2Mbps-56113994.mp4?v=0"
+          loop
+          controls={videoPlaying}
+          className='w-full h-full object-cover'
+        />
 
-        {/* Round Video play button */}
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 h-max'>
-
-          <button className={` w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center ${videoPlaying ? 'hidden' : ''}`} onClick={handlePlayVideo}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 5V19L19 12L8 5Z" fill="black" />
-            </svg>
-          </button>
-        </div>
+        {/* Custom play button overlay */}
+        {!videoPlaying && (
+          <div className='absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all'>
+            <button
+              className='w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all'
+              onClick={handlePlayVideo}
+            >
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 5V19L19 12L8 5Z" fill="#059c17" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
     </div>
