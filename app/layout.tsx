@@ -11,7 +11,7 @@ const cabin = Cabin({
 
 export const metadata: Metadata = {
   title: "Chip Anna Putt",
-  description: "Chip Anna Putt",
+  description: "Chip Anna Putt - For golfers of all skill levels",
 };
 
 export default function RootLayout({
