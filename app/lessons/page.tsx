@@ -245,7 +245,7 @@ export default function OnlineLessonsPage() {
                         </p>
                     </div>
 
-                    <div className="bg-white rounded-[2rem] border-4 border-gray-900 overflow-hidden shadow-2xl">
+                    <div className="bg-white rounded-4xl border-4 border-gray-900 overflow-hidden shadow-2xl">
                         <iframe
                             src="https://calendly.com/chipannaputt8/30min?hide_event_type_details=1&hide_gdpr_banner=1"
                             width="100%"
@@ -297,14 +297,14 @@ export default function OnlineLessonsPage() {
                         </div>
 
                         <div className="relative">
-                            <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10">
+                            <div className="aspect-4/5 rounded-[3rem] overflow-hidden border border-white/10">
                                 <img
-                                    src="https://images.unsplash.com/photo-1593111774240-d529f12ea4bb?q=80&w=1978&auto=format&fit=crop"
+                                    src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                     className="w-full h-full object-cover"
                                     alt="Golfer swing"
                                 />
                             </div>
-                            <div className="absolute -bottom-8 -left-8 bg-green-600 p-8 rounded-[2rem] shadow-2xl">
+                            <div className="absolute -bottom-8 -left-8 bg-green-600 p-8 rounded-4xl shadow-2xl">
                                 <p className="text-3xl font-black italic tracking-tighter mb-1">PRO TIP</p>
                                 <p className="text-green-50 font-medium">The ball WILL go in the hole!</p>
                             </div>
