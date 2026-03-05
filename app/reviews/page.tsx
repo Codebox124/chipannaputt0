@@ -22,7 +22,7 @@ export default function ReviewsPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
     const [errorMessage, setErrorMessage] = useState('')
-    const [activeTab, setActiveTab] = useState<'reviews' | 'form'>('reviews')
+    const [activeTab, setActiveTab] = useState<'reviews' | 'form'>('form')
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -150,12 +150,12 @@ export default function ReviewsPage() {
                     </motion.div>
 
                     {/* Navigation Tabs */}
-                    <div className="flex gap-4 mt-12">
+                    <div className="md:flex block gap-4 mt-12">
                         <button
                             onClick={() => setActiveTab('reviews')}
-                            className={`px-8 py-4 rounded-full font-bold transition-all flex items-center gap-2 ${activeTab === 'reviews'
-                                    ? 'bg-gray-900 text-white'
-                                    : 'bg-white text-gray-500 hover:bg-gray-100 border border-gray-200'
+                            className={`px-8 py-4 rounded-full font-bold transition-all flex items-center md:justify-start justify-center md:w-max w-full gap-2 md:mb-0 mb-3 ${activeTab === 'reviews'
+                                ? 'bg-gray-900 text-white'
+                                : 'bg-white text-gray-500 hover:bg-gray-100 border border-gray-200'
                                 }`}
                         >
                             <MessageSquare size={18} />
@@ -163,9 +163,9 @@ export default function ReviewsPage() {
                         </button>
                         <button
                             onClick={() => setActiveTab('form')}
-                            className={`px-8 py-4 rounded-full font-bold transition-all flex items-center gap-2 ${activeTab === 'form'
-                                    ? 'bg-gray-900 text-white'
-                                    : 'bg-white text-gray-500 hover:bg-gray-100 border border-gray-200'
+                            className={`px-8 py-4 rounded-full font-bold transition-all flex items-center md:justify-start justify-center md:w-max w-full gap-2 ${activeTab === 'form'
+                                ? 'bg-gray-900 text-white'
+                                : 'bg-white text-gray-500 hover:bg-gray-100 border border-gray-200'
                                 }`}
                         >
                             <Quote size={18} />
@@ -232,7 +232,7 @@ export default function ReviewsPage() {
                     >
                         <div className="max-w-3xl mx-auto">
                             <div className="bg-gray-900 rounded-[3rem] p-10 md:p-16 shadow-2xl relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-1/2 h-full bg-green-600/10 blur-[100px]" />
+                                <div className="absolute top-0 right-0 w-1/2 h-full bg-green-600/10 blur-[100px] pointer-events-none" />
 
                                 <div className="relative z-10 text-center mb-12">
                                     <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter leading-none">
