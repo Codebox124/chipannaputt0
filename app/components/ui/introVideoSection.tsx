@@ -35,10 +35,10 @@ const IntroVideoSection = () => {
 
                         {/* Play Button - Video Placeholder */}
                         <div className='relative flex items-center justify-center mb-6'>
-                            <div className='absolute w-28 h-28 md:w-40 md:h-40 bg-white/10 rounded-full animate-ping duration-[3000ms]'></div>
+                            <div className='absolute w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-full animate-ping duration-3000'></div>
                             <div className='absolute w-24 h-24 md:w-32 md:h-32 bg-white/20 rounded-full animate-pulse'></div>
                             <button
-                                className='relative w-24 h-24 md:w-32 md:h-32 bg-white rounded-full flex items-center justify-center hover:bg-white/90 transition-all transform hover:scale-110 group shadow-2xl'
+                                className='relative w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center hover:bg-white/90 transition-all transform hover:scale-110 group shadow-2xl'
                                 aria-label="Play video"
                                 title="Video coming soon"
                             >
@@ -52,7 +52,7 @@ const IntroVideoSection = () => {
                             </button>
                         </div>
 
-                        <div className="bg-white/10 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 inline-block">
+                        <div className="bg-white/10 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 inline-block mt-10">
                             <p className='text-sm md:text-base text-white font-bold tracking-widest uppercase'>
                                 Video Course Coming Soon
                             </p>
