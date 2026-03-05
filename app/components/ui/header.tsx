@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Search, ShoppingCart } from 'lucide-react';
+import { Menu, X, Search, ShoppingCart, Store } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -49,14 +49,6 @@ const Header = () => {
         { name: "Contact", href: "/contact" },
     ]
 
-    // Function to open Shopify cart
-    const openShopifyCart = () => {
-        // Access the Shopify Buy Button cart toggle
-        document.getElementById('custom-cart-toggle')?.addEventListener('click', () => {
-            (window as any).ShopifyBuy.UI.toggleCart()
-        }
-        )
-    }
     return (
         <div>
             {/* The green info header at the top of page - hides when scrolling */}
@@ -89,25 +81,25 @@ const Header = () => {
                     </button>
 
                     {/* Center: Logo */}
-                    <Link href="/" className='absolute left-1/2 -translate-x-1/2 flex items-center justify-center'>
+                    <Link href="/" className='flex items-center justify-center'>
                         <Image src="/logo.png" alt="Logo" width={180} height={180} className='md:w-20 w-36 h-auto' />
                     </Link>
 
                     {/* Right: Search & Cart Icons */}
-                    <div className='flex items-center gap-2 sm:gap-4'>
+                    <div className='flex items-center gap-0'>
                         {/* Search icon */}
                         <button className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center' aria-label="Search">
                             <Search size={22} strokeWidth={1.5} />
                         </button>
 
-                        {/* Cart Icon */}
-                        <button
-                            onClick={openShopifyCart}
+                        {/* Cart Icon - Now links to Shop */}
+                        <Link
+                            href="/shop"
                             className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center relative'
-                            aria-label="Shopping cart"
+                            aria-label="Shop"
                         >
-                            <ShoppingCart size={22} strokeWidth={1.5} />
-                        </button>
+                            <Store size={22} strokeWidth={1.5} />
+                        </Link>
                     </div>
                 </div>
 
@@ -138,20 +130,20 @@ const Header = () => {
                     </div>
 
                     {/* Desktop Icons */}
-                    <div className='flex items-center gap-3 text-black'>
+                    <div className='flex items-center gap-1 text-black'>
                         {/* Search icon */}
                         <button className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center' aria-label="Search">
                             <Search size={24} strokeWidth={1.5} />
                         </button>
 
-                        {/* Cart Icon */}
-                        <button
-                            onClick={openShopifyCart}
+                        {/* Cart Icon - Now links to Shop */}
+                        <Link
+                            href="/shop"
                             className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center relative'
-                            aria-label="Shopping cart"
+                            aria-label="Shop"
                         >
-                            <ShoppingCart size={24} strokeWidth={1.5} />
-                        </button>
+                            <Store size={24} strokeWidth={1.5} />
+                        </Link>
                     </div>
                 </div>
 
@@ -216,13 +208,14 @@ const Header = () => {
                                         <span>Search</span>
                                     </button>
 
-                                    <button
-                                        onClick={openShopifyCart}
+                                    <Link
+                                        href="/shop"
+                                        onClick={() => setMobileMenuOpen(false)}
                                         className="w-full flex items-center gap-4 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
                                     >
                                         <ShoppingCart size={20} strokeWidth={1.5} />
-                                        <span>View Cart</span>
-                                    </button>
+                                        <span>Visit Shop</span>
+                                    </Link>
 
                                     <a href="https://nq5qk0-y0.myshopify.com/account" className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
                                         <span>Account</span>

@@ -23,7 +23,14 @@ const JoinPage = () => {
 
         try {
             const templateParams = {
+                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
+                from_name: 'Waitlist Member',
+                from_email: email,
                 email: email,
+                phone: 'N/A',
+                interest: 'Waitlist Signup',
+                details: 'Community Events & Updates',
+                message: 'New user joined the community waitlist.',
                 time: new Date().toLocaleString('en-US', {
                     weekday: 'long',
                     year: 'numeric',

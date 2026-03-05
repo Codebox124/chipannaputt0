@@ -1,4 +1,3 @@
-import { div } from 'framer-motion/client'
 import React from 'react'
 import ShopifyBuyButton from './shopify-buy-button'
 
@@ -6,7 +5,7 @@ import ShopifyBuyButton from './shopify-buy-button'
 const StoreSection = () => {
     return (
         <div>
-            <ShopifyBuyButton/>
+            <ShopifyBuyButton />
         </div>
     )
 }

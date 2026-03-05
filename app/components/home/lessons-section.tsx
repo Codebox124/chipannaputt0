@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Calendar, Users, AlertCircle, CheckCircle } from 'lucide-react'
+import { Calendar, Users, AlertCircle, CheckCircle, ArrowRight, Play } from 'lucide-react'
 import emailjs from '@emailjs/browser'
+import { motion } from 'framer-motion'
 
 export default function LessonsSection() {
     useEffect(() => {
@@ -39,11 +40,21 @@ export default function LessonsSection() {
         try {
             const templateParams = {
                 to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                name: formData.name,
+                from_name: formData.name,
+                from_email: formData.email,
                 email: formData.email,
                 phone: formData.phone,
-                lessonType: formData.lessonType,
-                message: formData.message
+                interest: 'Online Lesson Inquiry (Home)',
+                details: `Lesson Type: ${formData.lessonType}`,
+                message: formData.message,
+                time: new Date().toLocaleString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
             }
 
             await emailjs.send(
@@ -73,171 +84,122 @@ export default function LessonsSection() {
         }
     }
 
-    const lessonTypes = [
+    const lessons = [
         {
             icon: Users,
-            title: 'One-on-One Coaching',
-            description: 'Personalized instruction tailored to your skill level and goals. Get direct feedback and custom lesson plans.'
+            title: 'Private Coaching',
+            tag: 'Most Popular',
+            description: 'Intensive one-on-one sessions tailored to your mechanical needs and course strategy.'
         },
         {
-            icon: Calendar,
-            title: 'Group Sessions',
-            description: 'Learn with other golfers in a collaborative environment. Great for building confidence and enjoying the learning process.'
+            icon: Play,
+            title: 'Video Analysis',
+            tag: 'Remote',
+            description: 'Digital feedback. Submit your swing and get a professional breakdown within 48 hours.'
         }
     ]
 
     return (
-        <section className="py-20 px-6 bg-linear-to-b from-green-50 to-white">
-            <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-900">
-                    Online Golf Lessons
-                </h2>
-                <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
-                    Learn professional golf techniques from the comfort of your home. Personalized coaching for all skill levels.
-                </p>
-
-                <div className="grid md:grid-cols-2 gap-12">
-                    {/* Lessons Info */}
+        <section className="py-24 px-6 bg-white overflow-hidden">
+            <div className="max-w-7xl mx-auto">
+                <div className="grid lg:grid-cols-2 gap-20 items-center">
+                    {/* Left: Content */}
                     <div>
-                        <h3 className="text-2xl font-bold mb-8 text-gray-900">What We Offer</h3>
-                        <div className="space-y-6">
-                            {lessonTypes.map((lesson, idx) => {
-                                const Icon = lesson.icon
-                                return (
-                                    <div key={idx} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                                        <Icon className="w-8 h-8 text-green-600 mb-3" />
-                                        <h4 className="font-bold text-gray-900 mb-2">{lesson.title}</h4>
-                                        <p className="text-gray-700 text-sm leading-relaxed">{lesson.description}</p>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div className="mt-8 p-6 bg-green-50 rounded-lg border border-green-200">
-                            <h4 className="font-bold text-gray-900 mb-2">Topics Covered</h4>
-                            <ul className="space-y-1 text-sm text-gray-700">
-                                <li>• PGA Fundamentals & Techniques</li>
-                                <li>• Swing Mechanics & Analysis</li>
-                                <li>• Short Game & Chipping</li>
-                                <li>• Putting Techniques</li>
-                                <li>• Course Management</li>
-                            </ul>
-                        </div>
-                        <a href="/lessons" className="inline-block mt-8 text-green-600 font-semibold hover:text-green-700">
-                            View full lessons page →
-                        </a>
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                        >
+                            <span className="text-green-600 font-bold uppercase tracking-widest text-xs mb-4 block">Instruction</span>
+                            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 tracking-tighter leading-none">
+                                Elevate Your <br />Performance.
+                            </h2>
+                            <p className="text-lg text-gray-600 mb-10 max-w-lg leading-relaxed">
+                                Our online curriculum bridges the gap between traditional lessons and modern convenience. Master the physics of a pro swing from your own practice facility.
+                            </p>
+
+                            <div className="space-y-6 mb-10">
+                                {lessons.map((item, idx) => {
+                                    const Icon = item.icon
+                                    return (
+                                        <div key={idx} className="group flex items-start gap-6 p-6 rounded-3xl border border-gray-100 bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-500">
+                                            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-gray-900 shadow-sm shrink-0 group-hover:bg-green-600 group-hover:text-white transition-all">
+                                                <Icon size={24} />
+                                            </div>
+                                            <div>
+                                                <div className="flex items-center gap-3 mb-1">
+                                                    <h4 className="font-black text-gray-900">{item.title}</h4>
+                                                    <span className="px-2 py-0.5 bg-gray-200 rounded text-[10px] uppercase font-bold text-gray-500">{item.tag}</span>
+                                                </div>
+                                                <p className="text-gray-500 text-sm leading-relaxed">{item.description}</p>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+
+                            <a href="/lessons" className="inline-flex items-center gap-2 text-gray-900 font-bold hover:text-green-600 transition-colors group">
+                                Explore full curriculum
+                                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </a>
+                        </motion.div>
                     </div>
 
-                    {/* Booking Form */}
-                    <div className="bg-white rounded-lg shadow-lg p-8">
-                        <h3 className="text-2xl font-bold mb-6 text-gray-900">Book a Lesson</h3>
+                    {/* Right: Modern Form Card */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="relative"
+                    >
+                        <div className="absolute inset-0 bg-green-600 blur-[100px] opacity-10 rounded-full" />
+                        <div className="relative bg-gray-900 rounded-[3rem] p-10 md:p-12 shadow-2xl overflow-hidden">
+                            <h3 className="text-3xl font-black text-white mb-2 tracking-tighter">Book a Live Lesson.</h3>
+                            <p className="text-gray-400 mb-8 text-sm">Request your first session and start your journey.</p>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Full Name
-                                </label>
+                            <form onSubmit={handleSubmit} className="space-y-4">
                                 <input
-                                    id="name"
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleInputChange}
-                                    placeholder="Your name"
+                                    placeholder="Full Name"
                                     required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors text-sm"
+                                    className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white focus:outline-none focus:border-green-500 transition-all font-medium placeholder:text-gray-600"
                                 />
-                            </div>
-
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Email Address
-                                </label>
                                 <input
-                                    id="email"
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    placeholder="your@email.com"
+                                    placeholder="Email Address"
                                     required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors text-sm"
+                                    className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white focus:outline-none focus:border-green-500 transition-all font-medium placeholder:text-gray-600"
                                 />
-                            </div>
-
-                            <div>
-                                <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Phone Number
-                                </label>
-                                <input
-                                    id="phone"
-                                    type="tel"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleInputChange}
-                                    placeholder="(555) 000-0000"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors text-sm"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="lessonType" className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Lesson Type
-                                </label>
-                                <select
-                                    id="lessonType"
-                                    name="lessonType"
-                                    value={formData.lessonType}
-                                    onChange={handleInputChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors text-sm"
-                                >
-                                    <option value="one-on-one">One-on-One Coaching</option>
-                                    <option value="group">Group Session</option>
-                                    <option value="not-sure">Not Sure Yet</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Tell Us About Your Golf Goals
-                                </label>
                                 <textarea
-                                    id="message"
                                     name="message"
                                     value={formData.message}
                                     onChange={handleInputChange}
-                                    placeholder="What are you looking to improve?"
-                                    rows={4}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 transition-colors resize-none text-sm"
+                                    placeholder="Your golf goals..."
+                                    rows={3}
+                                    className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white focus:outline-none focus:border-green-500 transition-all font-medium resize-none placeholder:text-gray-600"
                                 ></textarea>
-                            </div>
 
-                            {submitStatus === 'error' && (
-                                <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-400 rounded-lg">
-                                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-                                    <p className="text-red-700 text-sm">{errorMessage}</p>
-                                </div>
-                            )}
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="w-full bg-green-600 hover:bg-green-500 text-white font-black py-5 px-6 rounded-2xl transition-all flex items-center justify-center gap-3 mt-4"
+                                >
+                                    {isSubmitting ? 'Sending Request...' : 'Get Started'}
+                                    <ArrowRight size={20} />
+                                </button>
 
-                            {submitStatus === 'success' && (
-                                <div className="flex items-center gap-2 p-3 bg-green-100 border border-green-400 rounded-lg">
-                                    <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
-                                    <p className="text-green-700 text-sm">We&apos;ll contact you soon to confirm your lesson!</p>
-                                </div>
-                            )}
-
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
-                            >
-                                {isSubmitting ? 'Submitting...' : 'Request Lesson'}
-                            </button>
-                        </form>
-
-                        <p className="text-xs text-gray-500 mt-4 text-center">
-                            We&apos;ll respond within 24 hours to discuss your goals and schedule.
-                        </p>
-                    </div>
+                                {submitStatus === 'success' && (
+                                    <p className="text-green-400 text-center text-xs font-bold mt-4">We'll reach out within 24 hours.</p>
+                                )}
+                            </form>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

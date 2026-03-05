@@ -11,10 +11,6 @@ const HeroSection = () => {
                     Master the Shots <br /> That Matter
                 </h1>
 
-                <p className='text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed tracking-tight font-medium opacity-90 max-w-2xl'>
-                    The short game secret the pros use to dominate the course and lower their scores instantly.
-                </p>
-
                 <div className='flex flex-wrap gap-4 mt-4'>
                     <button className='btn btn-primary px-8 py-4 text-lg'>
                         Shop The Kit
