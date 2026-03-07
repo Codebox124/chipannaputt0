@@ -2,10 +2,11 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Search, ShoppingCart, Store } from 'lucide-react';
-import React, { useState, useEffect, useRef } from 'react'
+import { Menu, X, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import CartButton from '@/components/CartButton';
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -92,14 +93,8 @@ const Header = () => {
                             <Search size={22} strokeWidth={1.5} />
                         </button>
 
-                        {/* Cart Icon - Now links to Shop */}
-                        <Link
-                            href="/shop"
-                            className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center relative'
-                            aria-label="Shop"
-                        >
-                            <Store size={22} strokeWidth={1.5} />
-                        </Link>
+                        {/* Cart Button */}
+                        <CartButton />
                     </div>
                 </div>
 
@@ -136,14 +131,8 @@ const Header = () => {
                             <Search size={24} strokeWidth={1.5} />
                         </button>
 
-                        {/* Cart Icon - Now links to Shop */}
-                        <Link
-                            href="/shop"
-                            className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center relative'
-                            aria-label="Shop"
-                        >
-                            <Store size={24} strokeWidth={1.5} />
-                        </Link>
+                        {/* Cart Button */}
+                        <CartButton />
                     </div>
                 </div>
 
@@ -207,15 +196,6 @@ const Header = () => {
                                         <Search size={20} strokeWidth={1.5} />
                                         <span>Search</span>
                                     </button>
-
-                                    <Link
-                                        href="/shop"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="w-full flex items-center gap-4 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
-                                    >
-                                        <ShoppingCart size={20} strokeWidth={1.5} />
-                                        <span>Visit Shop</span>
-                                    </Link>
 
                                     <a href="https://nq5qk0-y0.myshopify.com/account" className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
                                         <span>Account</span>
