@@ -15,7 +15,7 @@ const Welcome = () => {
   return (
     <div className='w-full py-16 px-6 sm:px-10 md:px-16'>
 
-      <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter font-black mb-10 text-center italic'>
+      <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter font-black mb-10 text-center'>
         Welcome to Chip Anna Putt
       </h2>
 
