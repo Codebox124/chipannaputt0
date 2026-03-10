@@ -25,7 +25,7 @@ const IntroVideoSection = () => {
                         transition={{ duration: 0.8 }}
                         className="text-center"
                     >
-                        <h2 className='text-5xl md:text-7xl text-white font-black mb-4 tracking-tighter italic'>
+                        <h2 className='text-5xl md:text-7xl text-white font-black mb-4 tracking-tighter'>
                             Chip Anna Putt
                         </h2>
 
