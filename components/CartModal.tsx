@@ -110,7 +110,7 @@ export default function CartModal() {
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
                     <p className="font-semibold mb-1">ℹ️ Single Item Checkout</p>
                     <p className="text-blue-600">
-                      Currently only 1 item can be purchased at a time.
+                      Tax and shiping added to total cost
                     </p>
                   </div>
                 </>
@@ -129,7 +129,7 @@ export default function CartModal() {
                   <div className="flex items-center justify-between text-sm text-gray-600">
                     <span>Shipping</span>
                     <span className="flex items-center gap-1 text-green-600 font-semibold">
-                      ✨ FREE
+                      ✨ $11
                     </span>
                   </div>
                   <div className="h-px bg-gray-200 my-2" />

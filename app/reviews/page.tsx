@@ -20,7 +20,7 @@ export default function ReviewsPage() {
         videoUrl: ''
     })
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
     const [errorMessage, setErrorMessage] = useState('')
     const [activeTab, setActiveTab] = useState<'reviews' | 'form'>('form')
 
@@ -34,45 +34,33 @@ export default function ReviewsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setSubmitStatus('loading')
         setIsSubmitting(true)
-        setSubmitStatus('idle')
         setErrorMessage('')
 
         try {
-            const templateParams = {
-                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                from_name: formData.name,
-                from_email: formData.email,
-                rating: formData.rating,
-                review: formData.review,
-                video_url: formData.videoUrl || 'No video provided'
-            }
-
-            await emailjs.send(
-                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
-                process.env.NEXT_PUBLIC_EMAILJS_REVIEW_TEMPLATE || 'template_review',
-                templateParams
-            )
-
-            setSubmitStatus('success')
-            setFormData({
-                name: '',
-                email: '',
-                rating: 5,
-                review: '',
-                videoUrl: ''
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'review',
+                    ...formData,
+                    videoUrl: formData.videoUrl || 'No video provided'
+                })
             })
 
-            setTimeout(() => {
-                setSubmitStatus('idle')
-                setActiveTab('reviews')
-            }, 3000)
+            if (!response.ok) throw new Error('Failed to send review')
+
+            setSubmitStatus('success')
+            setIsSubmitting(false)
+            setFormData({ name: '', email: '', rating: 5, review: '', videoUrl: '' })
+
+            setTimeout(() => setSubmitStatus('idle'), 5000)
         } catch (error) {
             setSubmitStatus('error')
-            setErrorMessage(error instanceof Error ? error.message : 'Failed to send review')
-            console.error('[v0] Review submission error:', error)
-        } finally {
             setIsSubmitting(false)
+            setErrorMessage('Failed to send review. Please try again.')
+            console.error('Review form error:', error)
         }
     }
 

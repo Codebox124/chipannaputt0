@@ -20,7 +20,7 @@ export default function ContactPage() {
         message: ''
     })
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'loading'>('idle')
     const [errorMessage, setErrorMessage] = useState('')
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -33,54 +33,35 @@ export default function ContactPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setSubmitStatus('loading')
         setIsSubmitting(true)
-        setSubmitStatus('idle')
         setErrorMessage('')
 
         try {
-            const templateParams = {
-                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                from_name: formData.name,
-                from_email: formData.email,
-                email: formData.email,
-                phone: formData.phone,
-                interest: 'General Inquiry',
-                details: `Subject: ${formData.subject}`,
-                message: formData.message,
-                time: new Date().toLocaleString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'contact',
+                    ...formData
                 })
-            }
-
-            await emailjs.send(
-                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
-                process.env.NEXT_PUBLIC_EMAILJS_CONTACT_TEMPLATE || 'template_contact',
-                templateParams
-            )
-
-            setSubmitStatus('success')
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                subject: '',
-                message: ''
             })
 
-            setTimeout(() => {
+            if (!response.ok) throw new Error('Failed to send message')
+
+            setSubmitStatus('success')
+            setIsSubmitting(false)
+            setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+
+            setTimeout(() => () => {
                 setSubmitStatus('idle')
+                setIsSubmitting(false)
             }, 5000)
         } catch (error) {
             setSubmitStatus('error')
-            setErrorMessage(error instanceof Error ? error.message : 'Failed to send message')
-            console.error('[v0] Contact form error:', error)
-        } finally {
             setIsSubmitting(false)
+            setErrorMessage('Failed to send message. Please try again.')
+            console.error('Contact form error:', error)
         }
     }
 

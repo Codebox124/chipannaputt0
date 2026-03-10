@@ -22,37 +22,34 @@ const JoinPage = () => {
         setErrorMessage('')
 
         try {
-            const templateParams = {
-                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                from_name: 'Waitlist Member',
-                from_email: email,
-                email: email,
-                phone: 'N/A',
-                interest: 'Waitlist Signup',
-                details: 'Community Events & Updates',
-                message: 'New user joined the community waitlist.',
-                time: new Date().toLocaleString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'waitlist',
+                    email,
+                    time: new Date().toLocaleString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        timeZoneName: 'short'
+                    })
                 })
-            }
+            })
 
-            await emailjs.send(
-                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
-                process.env.NEXT_PUBLIC_EMAILJS_WAITLIST_TEMPLATE || 'template_v9ahwna',
-                templateParams
-            )
+            if (!response.ok) throw new Error('Failed to join waitlist')
 
             setStatus('success')
             setEmail('')
+
+            setTimeout(() => setStatus('idle'), 5000)
         } catch (error) {
             setStatus('error')
-            setErrorMessage('Something went wrong. Please try again.')
-            console.error('Waitlist submission error:', error)
+            setErrorMessage('Failed to join. Please try again.')
+            console.error('Waitlist form error:', error)
         }
     }
 

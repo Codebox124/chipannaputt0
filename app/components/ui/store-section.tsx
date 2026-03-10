@@ -5,7 +5,7 @@ import Product from '@/components/Product'
 const product = {
   id: 'chip-anna-putt-kit',
   name: 'Chip Anna Putt Kit',
-  price: 79.99,
+  price: 96.49,
   image: '/images/product1.png',
   description: 'Master your short game...'
 }

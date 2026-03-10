@@ -20,7 +20,7 @@ export default function OnlineLessonsPage() {
         message: ''
     })
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
     const [errorMessage, setErrorMessage] = useState('')
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -33,54 +33,32 @@ export default function OnlineLessonsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setSubmitStatus('loading')
         setIsSubmitting(true)
-        setSubmitStatus('idle')
         setErrorMessage('')
 
         try {
-            const templateParams = {
-                to_email: process.env.NEXT_PUBLIC_RECIPIENT_EMAIL || 'chipannaputt8@gmail.com',
-                from_name: formData.name,
-                from_email: formData.email,
-                email: formData.email,
-                phone: formData.phone,
-                interest: 'Online Lesson Inquiry',
-                details: `Lesson Type: ${formData.lessonType}`,
-                message: formData.message,
-                time: new Date().toLocaleString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'lessons',
+                    ...formData
                 })
-            }
-
-            await emailjs.send(
-                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_htp9egg',
-                process.env.NEXT_PUBLIC_EMAILJS_LESSON_TEMPLATE || 'template_lesson',
-                templateParams
-            )
-
-            setSubmitStatus('success')
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                lessonType: 'one-on-one',
-                message: ''
             })
 
-            setTimeout(() => {
-                setSubmitStatus('idle')
-            }, 5000)
+            if (!response.ok) throw new Error('Failed to send request')
+
+            setSubmitStatus('success')
+            setIsSubmitting(false)
+            setFormData({ name: '', email: '', phone: '', lessonType: '', message: '' })
+
+            setTimeout(() => setSubmitStatus('idle'), 5000)
         } catch (error) {
             setSubmitStatus('error')
-            setErrorMessage(error instanceof Error ? error.message : 'Failed to send inquiry')
-            console.error('[v0] Form submission error:', error)
-        } finally {
             setIsSubmitting(false)
+            setErrorMessage('Failed to send request. Please try again.')
+            console.error('Lessons form error:', error)
         }
     }
 
