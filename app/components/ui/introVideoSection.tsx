@@ -11,9 +11,16 @@ const IntroVideoSection = () => {
 
     return (
         <>
-            <section className='md:h-screen h-max w-full bg-white flex items-center justify-center relative overflow-hidden my-0'>
+            <section className=' h-max w-full bg-white relative overflow-hidden my-0'>
+                <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter font-black mb-10 text-center mt-16 mb-16'>
+                    Welcome to Chip Anna Putt
+                </h2>
+
                 {/* Hero Image Background */}
-                <iframe src="https://drive.google.com/file/d/10g5tviZPqGIy8iO3iB_q0XTjI-gVteVF/preview" width="640" height="480" className=' w-full md:h-full h-[50vh]'></iframe>
+
+                <div className='flex items-center justify-center'>
+                    <iframe src="https://drive.google.com/file/d/10g5tviZPqGIy8iO3iB_q0XTjI-gVteVF/preview" width="640" height="480" className=' w-full md:h-screen h-[50vh]'></iframe>
+                </div>
 
                 {/* Content Overlay */}
                 <div className='absolute inset-0 flex flex-col items-center justify-center z-10 px-6 pointer-events-none'>

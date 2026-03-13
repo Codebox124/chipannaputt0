@@ -19,11 +19,10 @@ const page = () => {
       <IntroVideoSection />
 
       <WhyChipa />
-      <Welcome />
 
       <section className='w-full py-20 md:py-32 flex items-center justify-center px-6 sm:px-10'>
 
-        <div className='w-full max-w-4xl mx-auto'>
+        <div className='w-full max-w-4xl mx-auto '>
           <h2 className='text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.1] font-black mb-8 text-center'>
             Mastering the fundamentals makes a better golfer
           </h2>
@@ -46,6 +45,9 @@ const page = () => {
         </div>
 
       </section>
+
+
+      <Welcome />
 
       <Chipping />
       <Putting />

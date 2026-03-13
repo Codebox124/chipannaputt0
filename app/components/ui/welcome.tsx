@@ -13,11 +13,7 @@ const Welcome = () => {
     setVideoPlaying(true)
   }
   return (
-    <div className='w-full py-16 px-6 sm:px-10 md:px-16'>
-
-      <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter font-black mb-10 text-center'>
-        Welcome to Chip Anna Putt
-      </h2>
+    <div className='w-full py-16 px-6 sm:px-10 md:px-16 md:mb mb-0-10 -mt-26'>
 
       <div className='relative max-w-6xl mx-auto aspect-video rounded-[32px] overflow-hidden shadow-2xl bg-black group'>
         {/* Video */}
