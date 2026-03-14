@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -44,7 +44,6 @@ const Header = () => {
         { name: "Home", href: "/" },
         { name: "Shop", href: "/shop" },
         { name: "Lessons", href: "/lessons" },
-        { name: "Join", href: "/join" },
         { name: "Donate", href: "/donate" },
         { name: "Contact", href: "/contact" },
     ]
@@ -68,7 +67,7 @@ const Header = () => {
                     top: hidden ? '0' : '32px',
                     transition: 'top 0.3s ease-in-out'
                 }}
-                className='w-full p-4 sm:p-4 md:p-5 px-9 sm:px-8 md:px-12 lg:px-16 bg-white fixed left-0 right-0 z-50 shadow-sm'>
+                className='w-full p-4 sm:p-4 md:p-5 px-3 md:px-12 lg:px-16 bg-white fixed left-0 right-0 z-50 shadow-sm'>
 
                 {/* Mobile Layout: Menu | Logo | Icons */}
                 <div className='lg:hidden flex items-center justify-between w-full'>
@@ -85,15 +84,16 @@ const Header = () => {
                         <Image src="/logo.png" alt="Logo" width={180} height={180} className='md:w-20 w-36 h-auto' />
                     </Link>
 
-                    {/* Right: Search & Cart Icons */}
-                    <div className='flex items-center gap-0'>
-                        {/* Search icon */}
-                        <button className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center' aria-label="Search">
-                            <Search size={22} strokeWidth={1.5} />
-                        </button>
+                    {/* Right: Actions & Cart Icon */}
+                    <div className='flex items-center gap-1.5'>
+                        <Link href="/join" className="text-xs font-bold text-white bg-[#059c17] hover:bg-[#048a14] px-4 py-1.5 rounded-full transition-colors whitespace-nowrap shadow-sm">
+                            Join
+                        </Link>
 
                         {/* Cart Button */}
-                        <CartButton />
+                        <div className="ml-0.5 sm:ml-1 transform scale-90 sm:scale-100">
+                            <CartButton />
+                        </div>
                     </div>
                 </div>
 
@@ -123,15 +123,19 @@ const Header = () => {
                         </nav>
                     </div>
 
-                    {/* Desktop Icons */}
-                    <div className='flex items-center gap-1 text-black'>
-                        {/* Search icon */}
-                        <button className='p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center' aria-label="Search">
-                            <Search size={24} strokeWidth={1.5} />
-                        </button>
+                    {/* Desktop Icons & Actions */}
+                    <div className='flex items-center gap-3 text-black'>
+                        <Link href="/exclusive" className="text-sm font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full transition-colors whitespace-nowrap">
+                            Videos
+                        </Link>
+                        <Link href="/join" className="text-sm font-bold text-white bg-[#059c17] hover:bg-[#048a14] px-5 py-2 rounded-full transition-colors whitespace-nowrap shadow-sm">
+                            Join
+                        </Link>
 
                         {/* Cart Button */}
-                        <CartButton />
+                        <div className="ml-2">
+                            <CartButton />
+                        </div>
                     </div>
                 </div>
 
@@ -184,22 +188,21 @@ const Header = () => {
                                             </Link>
                                         </li>
                                     ))}
+                                    <li>
+                                        <Link
+                                            href="/exclusive"
+                                            className={`block py-3 px-4 text-lg font-bold rounded-lg transition-colors mt-2 ${currentUrl === '/exclusive'
+                                                ? 'bg-gray-100 text-gray-900'
+                                                : 'text-gray-900 bg-gray-50 hover:bg-gray-100'
+                                                }`}
+                                        >
+                                            Videos
+                                        </Link>
+                                    </li>
                                 </ul>
 
                                 {/* Divider */}
                                 <div className="my-6 border-t border-gray-200" />
-
-                                {/* Additional Mobile Menu Items */}
-                                <div className="space-y-1">
-                                    <button className="w-full flex items-center gap-4 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                        <Search size={20} strokeWidth={1.5} />
-                                        <span>Search</span>
-                                    </button>
-
-                                    <a href="https://nq5qk0-y0.myshopify.com/account" className="w-full flex items-center gap-3 py-3 px-4 text-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                                        <span>Account</span>
-                                    </a>
-                                </div>
                             </nav>
                         </motion.div>
                     </>
