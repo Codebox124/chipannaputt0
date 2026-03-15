@@ -61,7 +61,7 @@ export default function CartModal() {
                     </p>
                   </div>
                 </div>
-                
+
                 <button
                   onClick={closeCart}
                   className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
@@ -124,7 +124,7 @@ export default function CartModal() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm text-gray-600">
                     <span>Item Price</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>$79.99</span>
                   </div>
                   <div className="flex items-center justify-between text-sm text-gray-600">
                     <span>Shipping</span>
@@ -146,8 +146,8 @@ export default function CartModal() {
                   className="w-full bg-gradient-to-r from-[#059c17] to-[#048a14] text-white font-bold py-4 rounded-2xl hover:shadow-lg hover:shadow-green-200 transition-all duration-300 flex items-center justify-center gap-2 group"
                 >
                   Proceed to Checkout
-                  <ArrowRight 
-                    size={20} 
+                  <ArrowRight
+                    size={20}
                     className="group-hover:translate-x-1 transition-transform"
                   />
                 </motion.button>
