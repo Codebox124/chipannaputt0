@@ -273,6 +273,41 @@ const templates = {
 
       </div>
     </div>
+  `,
+
+  join: (data: any) => `
+    <div style="font-family: system-ui, sans-serif, Arial; font-size: 14px; color: #212121; background-color: #f5f5f5; padding: 20px;">
+      <div style="max-width: 600px; margin: auto; background-color: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        
+        <div style="background: linear-gradient(135deg, #059c17 0%, #048a14 100%); padding: 40px 24px; text-align: center;">
+          <div style="background-color: rgba(255,255,255,0.1); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px; font-size: 40px; display: flex; align-items: center; justify-content: center;">
+            🏌️‍♂️
+          </div>
+          <h1 style="color: white; font-size: 28px; margin: 0 0 8px 0; font-weight: bold;">New Member Signed Up!</h1>
+          <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 16px;">Someone just joined the community.</p>
+        </div>
+
+        <div style="padding: 32px 24px;">
+          
+          <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 24px; border-radius: 12px; margin-bottom: 24px; border-left: 4px solid #059c17;">
+            <h2 style="margin: 0 0 20px 0; font-size: 20px; color: #059c17;">Member Information</h2>
+            
+            <div style="padding: 16px; background-color: white; border-radius: 8px;">
+              <div style="font-size: 12px; color: #6c757d; text-transform: uppercase; margin-bottom: 4px;">Email Address</div>
+              <div style="font-size: 18px; font-weight: 600;">
+                <a href="mailto:${data.email}" style="color: #059c17; text-decoration: none;">${data.email}</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="background: linear-gradient(135deg, #212121 0%, #424242 100%); padding: 32px 24px; text-align: center; color: white;">
+          <div style="font-size: 24px; font-weight: bold; margin-bottom: 8px;">⛳ Chip Anna Putt</div>
+        </div>
+
+      </div>
+    </div>
   `
 }
 
@@ -282,7 +317,7 @@ export async function POST(request: Request) {
     const { type, ...data } = body
 
     // Validate type
-    if (!['contact', 'lessons', 'review', 'waitlist'].includes(type)) {
+    if (!['contact', 'lessons', 'review', 'waitlist', 'join'].includes(type)) {
       return NextResponse.json(
         { error: 'Invalid form type' },
         { status: 400 }
@@ -298,7 +333,8 @@ export async function POST(request: Request) {
       contact: `New Contact: ${data.name}`,
       lessons: `New Lesson Request: ${data.name}`,
       review: `New Review: ${data.rating}⭐ from ${data.name}`,
-      waitlist: `New Waitlist Signup: ${data.email}`
+      waitlist: `New Waitlist Signup: ${data.email}`,
+      join: `New Member Signup: ${data.email}`
     }
 
     const result = await resend.emails.send({

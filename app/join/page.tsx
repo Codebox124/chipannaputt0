@@ -36,6 +36,19 @@ const JoinPage = () => {
                     password,
                 })
                 if (error) throw error
+                
+                // Send notification to the company about the new member
+                await fetch('/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'join',
+                        email,
+                    }),
+                }).catch(err => console.error('Failed to send join notification:', err))
+
                 // If email confirmations are off, the user is instantly logged in with a session
                 router.push('/exclusive')
                 router.refresh()
