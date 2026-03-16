@@ -2,15 +2,36 @@
 
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X } from 'lucide-react';
-import React, { useState, useEffect } from 'react'
+import { Menu, X, User as UserIcon, LogOut, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import CartButton from '@/components/CartButton';
+import { createClient } from '@/utils/supabase/client';
+import type { User } from '@supabase/supabase-js';
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [hidden, setHidden] = useState(false)
+    const [user, setUser] = useState<User | null>(null)
+    const [dropdownOpen, setDropdownOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const supabase = createClient()
+
+        // Get initial session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null)
+        })
+
+        // Listen for changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null)
+        })
+
+        return () => subscription.unsubscribe()
+    }, [])
 
     useEffect(() => {
         let lastScrollY = window.scrollY;
@@ -24,6 +45,17 @@ const Header = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
 
     // Close mobile menu when route changes
     const currentUrl = usePathname()
@@ -67,7 +99,7 @@ const Header = () => {
                     top: hidden ? '0' : '32px',
                     transition: 'top 0.3s ease-in-out'
                 }}
-                className='w-full p-4 sm:p-4 md:p-5 px-3 md:px-12 lg:px-16 bg-white fixed left-0 right-0 z-50 shadow-sm'>
+                className='w-full p-4 sm:p-4 md:p-5 px-3 md:px-8 lg:px-8 bg-white fixed left-0 right-0 z-50 shadow-sm'>
 
                 {/* Mobile Layout: Menu | Logo | Icons */}
                 <div className='lg:hidden flex items-center justify-between w-full'>
@@ -86,9 +118,54 @@ const Header = () => {
 
                     {/* Right: Actions & Cart Icon */}
                     <div className='flex items-center gap-1.5'>
-                        <Link href="/join" className="text-xs font-bold text-white bg-[#059c17] hover:bg-[#048a14] px-4 py-1.5 rounded-full transition-colors whitespace-nowrap shadow-sm">
-                            Join
-                        </Link>
+                        {user ? (
+                            <div className="relative" ref={dropdownRef}>
+                                <button
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 px-3 rounded-full transition-colors shadow-sm"
+                                    aria-label="User menu"
+                                >
+                                    <UserIcon size={16} />
+                                    <ChevronDown size={14} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                <AnimatePresence>
+                                    {dropdownOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            transition={{ duration: 0.15 }}
+                                            className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-2 z-50 flex flex-col overflow-hidden"
+                                        >
+                                            <div className="px-4 py-2 border-b border-gray-100 mb-1">
+                                                <p className="text-xs text-gray-500 font-medium truncate">{user.email}</p>
+                                            </div>
+                                            <Link
+                                                href="/exclusive"
+                                                onClick={() => setDropdownOpen(false)}
+                                                className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors"
+                                            >
+                                                Members Hub
+                                            </Link>
+                                            <form action="/auth/signout" method="post" className="m-0 p-0 block w-full">
+                                                <button
+                                                    type="submit"
+                                                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors mt-1 border-t border-gray-100 pt-3 pb-2"
+                                                >
+                                                    <LogOut size={16} />
+                                                    Sign Out
+                                                </button>
+                                            </form>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        ) : (
+                            <Link href="/join" className="text-xs font-bold text-white bg-[#059c17] hover:bg-[#048a14] px-4 py-1.5 rounded-full transition-colors whitespace-nowrap shadow-sm">
+                                Join
+                            </Link>
+                        )}
 
                         {/* Cart Button */}
                         <div className="ml-0.5 sm:ml-1 transform scale-90 sm:scale-100">
@@ -128,9 +205,59 @@ const Header = () => {
                         <Link href="/exclusive" className="text-sm font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full transition-colors whitespace-nowrap">
                             Videos
                         </Link>
-                        <Link href="/join" className="text-sm font-bold text-white bg-[#059c17] hover:bg-[#048a14] px-5 py-2 rounded-full transition-colors whitespace-nowrap shadow-sm">
-                            Join
-                        </Link>
+                        {user ? (
+                            <div className="relative" ref={dropdownRef}>
+                                <button
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-full transition-colors shadow-sm"
+                                    aria-label="User menu"
+                                >
+                                    <UserIcon size={18} />
+                                    <span className="text-sm font-medium hidden md:block w-full max-w-24 truncate">
+                                        {user.email?.split('@')[0]}
+                                    </span>
+                                    <ChevronDown size={16} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                <AnimatePresence>
+                                    {dropdownOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            transition={{ duration: 0.15 }}
+                                            className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-lg py-2 z-50 flex flex-col overflow-hidden"
+                                        >
+                                            <div className="px-4 py-3 border-b border-gray-100 mb-1 bg-gray-50/50">
+                                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">Signed in as</p>
+                                                <p className="text-sm text-gray-900 font-medium truncate">{user.email}</p>
+                                            </div>
+                                            <Link
+                                                href="/exclusive"
+                                                onClick={() => setDropdownOpen(false)}
+                                                className="px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-black transition-colors flex items-center gap-2"
+                                            >
+                                                <UserIcon size={16} className="text-gray-400" />
+                                                Members Hub
+                                            </Link>
+                                            <form action="/auth/signout" method="post" className="m-0 p-0 block w-full">
+                                                <button
+                                                    type="submit"
+                                                    className="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors mt-1 border-t border-gray-100 pt-3"
+                                                >
+                                                    <LogOut size={16} />
+                                                    Sign Out
+                                                </button>
+                                            </form>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        ) : (
+                            <Link href="/join" className="text-sm font-bold text-white bg-[#059c17] hover:bg-[#048a14] px-5 py-2 rounded-full transition-colors whitespace-nowrap shadow-sm">
+                                Join
+                            </Link>
+                        )}
 
                         {/* Cart Button */}
                         <div className="ml-2">
