@@ -36,6 +36,8 @@ const puttingVideos = [
     { title: "Stance", id: "1qqh4IppACMuWBF8JEhjMioS5F3I4l3-y" },
 ]
 
+import VideoCard from './VideoCard'
+
 export default async function ExclusivePage() {
     const supabase = await createClient()
 
@@ -70,20 +72,7 @@ export default async function ExclusivePage() {
                     <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Putting Masterclass</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {puttingVideos.map((video, idx) => (
-                            <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                                <div className="aspect-video bg-gray-100 relative w-full overflow-hidden">
-                                    <iframe 
-                                        src={`https://drive.google.com/file/d/${video.id}/preview`} 
-                                        width="100%" 
-                                        height="100%" 
-                                        allow="autoplay" 
-                                        className="border-0 absolute inset-0"
-                                    />
-                                </div>
-                                <div className="p-5">
-                                    <h3 className="font-bold text-lg text-gray-900">{video.title}</h3>
-                                </div>
-                            </div>
+                            <VideoCard key={idx} title={video.title} id={video.id} />
                         ))}
                     </div>
                 </div>
@@ -92,20 +81,7 @@ export default async function ExclusivePage() {
                     <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Swing Curriculum</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {swingVideos.map((video, idx) => (
-                            <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                                <div className="aspect-video bg-gray-100 relative w-full overflow-hidden">
-                                    <iframe 
-                                        src={`https://drive.google.com/file/d/${video.id}/preview`} 
-                                        width="100%" 
-                                        height="100%" 
-                                        allow="autoplay" 
-                                        className="border-0 absolute inset-0"
-                                    />
-                                </div>
-                                <div className="p-5">
-                                    <h3 className="font-bold text-lg text-gray-900">{video.title}</h3>
-                                </div>
-                            </div>
+                            <VideoCard key={idx} title={video.title} id={video.id} />
                         ))}
                     </div>
                 </div>
